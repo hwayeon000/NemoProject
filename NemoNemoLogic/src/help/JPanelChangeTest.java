@@ -226,6 +226,16 @@ class MyPanel extends JPanel {
 		g.setFont(new Font("Life", Font.ITALIC, 15));
 		g.drawString("life", 400, 150);
 		
+
+		for (int i = 0; i < 15; i++) {
+			g.setFont(new Font("ans", Font.BOLD, 20));
+			if (i > 4) {
+				g.drawString(i + "", i * 25, 20);				
+			} else {
+				g.drawString(" ", i * 25, 20);								
+			}
+		}
+		
 		for (int i = 0; i <= 10; i++) {
 			// x, y 위치, 크기, 크기
 //			g.drawLine(0, 25 * i, 250, 25 * i);
@@ -239,7 +249,7 @@ class MyPanel extends JPanel {
 			for (int j = 0; j < 15; j++) {
 				if (map[i][j] == 1) {
 					count++;
-					// g.fillOval(i * 25, j * 25, 25, 25);
+					// g.fillOval(i * 25, j * 25, 25, 25);`
 					// 사각형 칠하기
 					g.setColor(Color.BLUE);
 					// i, j 인덱스..
