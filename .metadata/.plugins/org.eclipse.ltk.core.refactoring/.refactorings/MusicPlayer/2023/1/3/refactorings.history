@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;musicPlayer.Main_v&apos; to &apos;Main_V&apos;&#x0D;&#x0A;- Original project: &apos;MusicPlayer&apos;&#x0D;&#x0A;- Original element: &apos;musicPlayer.Main_v&apos;&#x0D;&#x0A;- Renamed element: &apos;musicPlayer.Main_V&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;Main_v&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src&lt;musicPlayer{Main_v.java[Main_v" matchStrategy="1" name="Main_V" qualified="false" references="true" similarDeclarations="false" stamp="1674001674356" textual="false" version="1.0"/>
+</session>

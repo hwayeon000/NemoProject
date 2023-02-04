@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename type &apos;배열.Ex02배여예제&apos; to &apos;Ex02배열예제&apos;&#x0D;&#x0A;- Original project: &apos;Ex04배열&apos;&#x0D;&#x0A;- Original element: &apos;배열.Ex02배여예제&apos;&#x0D;&#x0A;- Renamed element: &apos;배열.Ex02배열예제&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename type &apos;Ex02배여예제&apos;" flags="589830" id="org.eclipse.jdt.ui.rename.type" input="/src&lt;배열{Ex02배여예제.java[Ex02배여예제" matchStrategy="1" name="Ex02배열예제" qualified="false" references="true" similarDeclarations="false" stamp="1672984604317" textual="false" version="1.0"/>
+</session>

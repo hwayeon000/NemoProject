@@ -1,0 +1,89 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.util.LinkedList;
+import java.util.Random;
+
+public class Main {
+	
+	static class MyFarm extends JFrame {
+		
+		static class XY{
+			int x;
+			int y;
+			public XY(int x, int y) {
+				this.x = x;
+				this.y = y;
+			}
+		}
+		static JPanel panelNorth;
+		static JPanel panelCenter;
+		static JLabel labelTitle;
+		static JLabel labelMessage;
+		static JPanel[][] panels = new JPanel[20][20];
+		static int[][] map = new int[20][20];  // Fruit 9, Bomb 8, 0 Blank
+		static LinkedList<XY> snake = new LinkedList<XY>();
+		static int dir = 3; // move direction 0 : up, 1 : down, 2 : Left, 3 : right
+		static int score = 0;
+		static int time = 0; // game time ( unit 1 second )
+		static int timeTickCount = 0; // per 200ms
+		static Timer timer = null;
+		
+		public MyFarm(String title) {
+			super( title );
+			this.setSize(400, 500);
+			this.setVisible(true);
+			this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			
+			initUI(); // init UI
+//			makeSnakeList(); // make snake body
+//			startTimer(); // start timer
+//			setKeyListener(); // listen key event
+//			makeFruit(); // make fruit
+		}
+		
+		public void initUI() {
+			this.setLayout(new BorderLayout());
+			
+			panelNorth = new JPanel();
+			panelNorth.setPreferredSize(new Dimension(400, 100));
+			panelNorth.setBackground(Color.black);
+			panelNorth.setLayout(new FlowLayout());
+			
+			labelTitle = new JLabel("Score: 0, Time: 0Sec");
+			labelTitle.setPreferredSize(new Dimension(400, 50));
+			labelTitle.setFont(new Font("TimesRoman", Font.BOLD, 20));
+			labelTitle.setForeground(Color.white);
+			labelTitle.setHorizontalAlignment(JLabel.CENTER);
+			panelNorth.add( labelTitle );
+		
+			labelMessage = new JLabel("Eat Fruit!");
+			labelMessage.setPreferredSize(new Dimension(400, 20));
+			labelMessage.setFont(new Font("TimesRoman", Font.BOLD, 20));
+			labelMessage.setForeground(Color.yellow);
+			labelMessage.setHorizontalAlignment(JLabel.CENTER);
+			panelNorth.add( labelMessage );
+			
+			
+			this.add(panelNorth);
+			
+			panelCenter = new JPanel();
+			panelCenter.setLayout(new GridLayout(20,20));
+			
+			for(int i = 0; i < 20; i++) { // i Loop : Row
+				for (int j = 0; j < 20; j++) { // j Loop : Column
+					map[i][j] = 0; // init 0 : Black
+				}
+			}
+			
+		}
+		
+		
+	}
+	
+	public static void main(String[] args) {
+		new MyFarm("Snake Game");
+		
+	}
+
+}

@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename package &apos;학생관리프로그램&apos; to &apos;회원정보관리프로그램&apos;&#x0D;&#x0A;- Original project: &apos;Ex11JDBC&apos;&#x0D;&#x0A;- Original element: &apos;Ex11JDBC/src/학생관리프로그램&apos;&#x0D;&#x0A;- Renamed element: &apos;Ex11JDBC/src/회원정보관리프로그램&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename package &apos;학생관리프로그램&apos;" flags="589830" hierarchical="false" id="org.eclipse.jdt.ui.rename.package" input="/src&lt;학생관리프로그램" name="회원정보관리프로그램" qualified="false" references="true" stamp="1674110307661" textual="false" version="1.0"/>
+</session>
