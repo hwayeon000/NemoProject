@@ -301,11 +301,11 @@ class MyPanel extends JPanel {
 						// 사각형 칠하기
 						g.setColor(Color.BLUE);
 						// i, j 인덱스..
-						System.out.println("check : " + i * 25 + ", " + j * 25);
+						System.out.println("check : " + i + ", " + j);
 						g.fillRect(i * 25, j * 25, 25, 25);
 //					g.fillRect(125 + (i * 25), 125 + (j * 25), 25, 25);
 					} else if (map[i][j] == 3) {
-						count++;
+						
 						// g.fillOval(i * 25, j * 25, 25, 25);
 						// 사각형 칠하기
 						g.setColor(Color.yellow);
@@ -327,33 +327,62 @@ class MyPanel extends JPanel {
 @SuppressWarnings("serial")
 class JPanel01 extends JPanel {
 
-	private JButton btnChange, btnOut;
+	private JButton btnChange1, btnChange2, btnOut;
 	private JScrollPane jScrollPane1;
 	private JTextArea jTextArea1;
 	private JPanelChange win;
+	private String gameChoice = "";
 
 	public JPanel01(JPanelChange win) {
 		this.win = win;
 		setLayout(null);
 
-		btnChange = new JButton("Level 2");
-		btnChange.setSize(130, 20);
-		btnChange.setLocation(10, 10);
-		add(btnChange);
+		btnChange1 = new JButton("Level 1");
+		btnChange1.setSize(90, 20);
+		btnChange1.setLocation(10, 10);
+		add(btnChange1);
+		
+		btnChange2 = new JButton("Level 2");
+		btnChange2.setSize(90, 20);
+		btnChange2.setLocation(110, 10);
+		add(btnChange2);
 
 		btnOut = new JButton("로그아웃");
 		btnOut.setSize(90, 20);
-		btnOut.setLocation(150, 10);
+		btnOut.setLocation(230, 10);
 		add(btnOut);
+		// 게임 설명
+		String exm = "<html><body style='text-align:center;'>"
+				+ "=============================================<br/>"
+				+ "ː            네모네모 로직 게임 설명             ː<br/>"
+				+ "ː                                          ː<br/>"
+				+ "ː   1. 쓰인 숫자만큼 연속된 칸을 칠할것 !          ː<br/>"
+				+ "ː   2. 숫자와 숫자 사이에는 최소한 한 칸을 비울 것 ! ː<br/>"
+				+ "ː   3. 숫자의 순서와 칠해진 칸의 순서가 일치할 것 !  ː<br/>"
+				+ "=============================================</body></html>";
+		
+		String playGame = "<html><body style='text-align:center;'>"
+				+ "---------------------------------<br/>"
+				+ "게임을 선택해 주세요 ( •̀ ω •́ )✧<br/>"
+				+ "---------------------------------</body></html>";
+				
+//		if (gameChoice == ) {
+//			
+//		}
+		JLabel exmLb = new JLabel(exm, JLabel.CENTER);
+		exmLb.setBounds(10, 40, 320, 100);
+		add(exmLb);
 
-		jTextArea1 = new JTextArea();
+//		jTextArea1 = new JTextArea();
+//		jScrollPane1 = new JScrollPane(jTextArea1);
+//		jScrollPane1.setSize(200, 150);
+//		jScrollPane1.setLocation(10, 240);
+//		add(jScrollPane1);
 
-		jScrollPane1 = new JScrollPane(jTextArea1);
-		jScrollPane1.setSize(200, 150);
-		jScrollPane1.setLocation(10, 40);
-		add(jScrollPane1);
-
-		btnChange.addActionListener(new MyGameListener());
+		
+		
+		
+		btnChange2.addActionListener(new MyGameListener());
 		btnOut.addActionListener(new OutListener());
 	}
 
@@ -522,3 +551,5 @@ class JPanel02 extends JPanel {
 	}
 
 }
+
+
