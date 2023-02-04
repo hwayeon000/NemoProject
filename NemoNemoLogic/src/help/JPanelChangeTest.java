@@ -55,6 +55,7 @@ public class JPanelChangeTest extends JFrame {
 		// 10 logic
 		win.myPanel = new MyPanel(win);
 
+		win.setFocusable(true);
 		win.add(win.jpanel02);
 		// 프레임을 닫았을 때 메모리에서 제거되도록 설정
 		win.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -66,6 +67,7 @@ public class JPanelChangeTest extends JFrame {
 	}
 }
 
+@SuppressWarnings("serial")
 //페널 변경
 class JPanelChange extends JFrame {
 
@@ -78,18 +80,18 @@ class JPanelChange extends JFrame {
 		if (panelName.equals("Panel01")) {
 			getContentPane().removeAll();
 			getContentPane().add(jpanel01);
-			revalidate();
-			repaint();
+			jpanel01.revalidate();
+			jpanel01.repaint();
 		} else if (panelName.equals("MyPanel")) {
 			getContentPane().removeAll();
 			getContentPane().add(myPanel);
-			revalidate();
-			repaint();
+			myPanel.revalidate();
+			myPanel.repaint();
 		} else {
 			getContentPane().removeAll();
 			getContentPane().add(jpanel02);
-			revalidate();
-			repaint();
+			jpanel02.revalidate();
+			jpanel02.repaint();
 		}
 	}
 }
@@ -115,19 +117,35 @@ class MyPanel extends JPanel {
 
 
 	private JPanelChange win;
-
+	private JButton btnMain, btnX, btnPaint;
 	int click_x = -1, click_y = -1;
+	public boolean userClick;
 
 	public MyPanel(JPanelChange win) {
 		setLayout(null);
 		this.win = win;
 
 		// 게임 페이지에서 나가는 버튼
-		JButton btn = new JButton("메인으로");
-		btn.setSize(90, 20);
-		btn.setLocation(430, 356);
-		add(btn);
-		btn.addActionListener(new MyMainListener());
+		btnMain = new JButton("메인으로");
+		btnMain.setSize(90, 20);
+		btnMain.setLocation(430, 356);
+		add(btnMain);
+		btnMain.addActionListener(new MyMainListener());
+		
+		// 파랑으로 칠하기
+		btnPaint = new JButton("칠하기");
+		btnPaint.setSize(90, 20);
+		btnPaint.setLocation(430, 296);
+		add(btnPaint);
+		btnPaint.addActionListener(new MyPaintListener());
+		
+		// 노랑으로 칠하기
+		btnX = new JButton("X");
+		btnX.setSize(90, 20);
+		btnX.setLocation(430, 326);
+		add(btnX);
+		btnX.addActionListener(new MyXListener());
+		
 
 		addKeyListener(new KeyListener() {
 
@@ -175,33 +193,44 @@ class MyPanel extends JPanel {
 				repaint();
 			}
 		});
+		
 		// 마우스 클릭 이벤트
 		addMouseListener(new MouseListener() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
+				// 마우스가 때어지는 순간 실행
 			}
 
 			@Override
 			public void mousePressed(MouseEvent e) {
+				// 마우스를 누르는 순간 실행
 			}
 
 			@Override
 			public void mouseExited(MouseEvent e) {
+				// 마우스가 지정 영역 안에 들어 올 경우 실행
 			}
 
 			@Override
 			public void mouseEntered(MouseEvent e) {
 			}
 
+			// 마우스를 눌렀다 떼는 순간 실행
 			@Override
 			public void mouseClicked(MouseEvent e) {
 //				if (e.getX() <= 275 && e.getY() <= 275) {
 				if (e.getX() <= 400 && e.getY() <= 400) {
 					int x = e.getX() / x_max;
 					int y = e.getY() / y_max;
-					map[x][y] = 1;
 					click_x = x;
 					click_y = y;
+					
+					if(userClick) {
+						map[x][y] = 1;
+					} else {
+						map[x][y] = 3;						
+					}
+					
 					System.out.println("x, y : " + x + ", " + y);
 				}
 				repaint();
@@ -216,6 +245,22 @@ class MyPanel extends JPanel {
 			win.change("Panel01");
 		}
 	}
+	
+	// 칠하기 버튼 기능
+	class MyPaintListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			userClick = true;
+		}
+	}
+	
+	// X 버튼 기능
+	class MyXListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			userClick = false;
+		}
+	}
 
 	// 칸 칠하기
 	public void paintComponent(Graphics g) {
@@ -227,42 +272,46 @@ class MyPanel extends JPanel {
 		g.drawString("life", 400, 150);
 		
 
+		// 출력문 테스트중, 힌트 출력 필요
 		for (int i = 0; i < 15; i++) {
-			g.setFont(new Font("ans", Font.BOLD, 20));
+			g.setFont(new Font("ans", Font.CENTER_BASELINE, 15));
 			if (i > 4) {
-				g.drawString(i + "", i * 25, 20);				
+				g.drawString(" " + i, i * 25, 20);				
 			} else {
 				g.drawString(" ", i * 25, 20);								
 			}
 		}
 		
+		// 125,125 기준으로 라인 그리기
 		for (int i = 0; i <= 10; i++) {
 			// x, y 위치, 크기, 크기
 //			g.drawLine(0, 25 * i, 250, 25 * i);
 //			g.drawLine(25 * i, 0, 25 * i, 250);
-			
 			g.drawLine(125, 125 + (25 * i), 375, 125 + (25 * i));
 			g.drawLine(125 + (25 * i), 125, 125 + (25 * i), 375);
 		}
 
+		// 칠하는 영역
 		for (int i = 0; i < 15; i++)
 			for (int j = 0; j < 15; j++) {
-				if (map[i][j] == 1) {
-					count++;
-					// g.fillOval(i * 25, j * 25, 25, 25);`
-					// 사각형 칠하기
-					g.setColor(Color.BLUE);
-					// i, j 인덱스..
-					System.out.println("check : " + i * 25 + ", " + j * 25);
-					g.fillRect(i * 25, j * 25, 25, 25);
+				// 힌트 출력부 안칠해지도록 범위 지정
+				if (i > 4 && j > 4) {
+					if (map[i][j] == 1) {
+						count++;
+						// 사각형 칠하기
+						g.setColor(Color.BLUE);
+						// i, j 인덱스..
+						System.out.println("check : " + i * 25 + ", " + j * 25);
+						g.fillRect(i * 25, j * 25, 25, 25);
 //					g.fillRect(125 + (i * 25), 125 + (j * 25), 25, 25);
-				} else if (map[i][j] == 3) {
-					count++;
-					// g.fillOval(i * 25, j * 25, 25, 25);
-					// 사각형 칠하기
-					g.setColor(Color.yellow);
-					// i, j 인덱스..
-					g.fillRect(i * 25, j * 25, 25, 25);
+					} else if (map[i][j] == 3) {
+						count++;
+						// g.fillOval(i * 25, j * 25, 25, 25);
+						// 사각형 칠하기
+						g.setColor(Color.yellow);
+						// i, j 인덱스..
+						g.fillRect(i * 25, j * 25, 25, 25);
+					}
 				}
 			}
 
