@@ -1,5 +1,6 @@
 package help;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Controller {
@@ -46,8 +47,10 @@ public class Controller {
 		}
 	}
 
-
-
+	public ArrayList<Integer> levelChoice(int level_choice) {
+		ArrayList<Integer> res = dao.levelChoice(level_choice);
+		return res;
+	}
 
 
 

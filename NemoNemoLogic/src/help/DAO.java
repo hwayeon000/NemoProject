@@ -11,11 +11,6 @@ public class DAO {
 	Connection conn = null;
 	PreparedStatement psmt = null;
 	ResultSet rs = null;
-	
-
-
-
-	
 
 	public void getCon() {
 		try {
