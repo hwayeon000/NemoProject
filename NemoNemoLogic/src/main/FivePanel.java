@@ -181,16 +181,58 @@ public class FivePanel extends JPanel {
 		g.drawString("life", 400, 150);
 
 		// 출력문 테스트중, 힌트 출력 필요
+//		for (int i = 0; i < 8; i++) {
+//			g.setFont(new Font("ans", Font.CENTER_BASELINE, 15));
+//			if (i > 2) {
+//				System.out.print(i + " ");
+//				g.drawString(" " + i, i * 25, 20);
+//			} else {
+//				System.out.print("else:" + i + " ");
+//				g.drawString(" ", i * 25, 20);
+//			}
+//		}
+		
+		String ans = "10101,00100,01110,01010,01110";
+		// 답데이터 이중배열로
+		int[][] res = PrintQuestion.arrMake(ans, 5); 
+		// x hint
+		String[] hintArrX = PrintQuestion.getHintArrX(res, 5);
+		// y hint
+		String[] hintArrY = PrintQuestion.getHintArrY(res, 5);
+
+ 		// 나오긴 하는데 맞는 로직은 아님..ㅎㅎ...
+		// 수정해보자.....
 		for (int i = 0; i < 8; i++) {
-			g.setFont(new Font("ans", Font.CENTER_BASELINE, 15));
-			if (i > 2) {
-				g.drawString(" " + i, i * 25, 20);
-			} else {
-				g.drawString(" ", i * 25, 20);
+			g.setFont(new Font("ans", Font.CENTER_BASELINE, 18));
+			for (int j = 0; j < map.length; j++) {
+				// X
+				if (i<3&&j>2) {
+					String[] a = hintArrX[j - 3].split(",");
+					// length = 3, 2, 1
+					if (a.length > 2-i) {
+						int n = a.length;
+						g.drawString(" " + a[i-(3-n)], i * 25, j * 25 + 20);
+					} else {
+						g.drawString(" ", i * 25, j * 25 + 20);
+					}
+				// Y  
+				} else if (i>2&&j<3) {
+					String[] a = hintArrY[i-3].split(",");
+					if (a.length > 2-j) {
+						int n = a.length;
+						g.drawString(" " + a[j-(3-n)], i * 25, j * 25 + 20);
+//						g.drawString(" " + a[2-j], i * 25, j * 25 + 20);
+					} else {
+						g.drawString(" ", i * 25, j * 25 + 20);
+					}
+				}
 			}
 		}
+		
+		
+		
 
-		// 125,125 기준으로 라인 그리기
+		// 75, 75 기준으로 라인 그리기
 		for (int i = 0; i <= 5; i++) {
 			// x, y 위치, 크기, 크기
 //			g.drawLine(0, 25 * i, 250, 25 * i);

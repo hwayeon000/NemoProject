@@ -22,8 +22,10 @@ public class DAO {
 //			String user = "campus_d_0120_4";
 //			String password = "smhrd4";
 			String url = "jdbc:oracle:thin:@localhost:1521:xe";
-			String user = "C##test";
-			String password = "12345";
+			String user = "C##NEMO";
+			String password = "NEMO1234";
+//			String user = "C##TEST";
+//			String password = "12345";
 			
 			conn = DriverManager.getConnection(url, user, password);
 			

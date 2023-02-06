@@ -87,12 +87,15 @@ public class MainPanel extends JPanel  {
 
 	}
 
-	// 버튼 누르면 10 Logic 호출
+	// 10이랑 5 Logic 수정을 위한 호출
 	class MyGameListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			exmLb.setText(exm);
+			
 			win.change("FivePanel");
+			
+//			win.change("TenPanel");
 		}
 	}
 

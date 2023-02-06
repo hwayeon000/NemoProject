@@ -21,10 +21,7 @@ public class TenPanel extends JPanel{
 	int count = 0;
 
 //	10 * 10
-//	int[][] map = { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-//			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-//			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-//			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, };
+// 힌트 출력부 포함, 힌트부 : ( (10 + 1) / 2 )
 	int[][] map = { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -189,14 +186,53 @@ public class TenPanel extends JPanel{
 		g.drawString("life", 400, 150);
 
 		// 출력문 테스트중, 힌트 출력 필요
+//		for (int i = 0; i < 15; i++) {
+//			g.setFont(new Font("ans", Font.CENTER_BASELINE, 15));
+//			if (i > 4) {
+//				g.drawString(" " + i, i * 25, 20);
+//			} else {
+//				g.drawString(" ", i * 25, 20);
+//			}
+//		}
+		int num = 10;
+		String ans = "0100000010,1101001011,1001111001,1101111011,1110110111,1111111111,1101111011,1000110001,1100110011,0110110110";
+		// 답데이터 이중배열로
+		int[][] res = PrintQuestion.arrMake(ans, num); 
+		// x hint
+		String[] hintArrX = PrintQuestion.getHintArrX(res, num);
+		// y hint
+		String[] hintArrY = PrintQuestion.getHintArrY(res, num);
+ 		
+		// 10 * 10 힌트 출력부
 		for (int i = 0; i < 15; i++) {
-			g.setFont(new Font("ans", Font.CENTER_BASELINE, 15));
-			if (i > 4) {
-				g.drawString(" " + i, i * 25, 20);
-			} else {
-				g.drawString(" ", i * 25, 20);
+			g.setFont(new Font("ans", Font.CENTER_BASELINE, 18));
+			for (int j = 0; j < map.length; j++) {
+				// X
+				if (i<5&&j>4) {
+					String[] a = hintArrX[j - 5].split(",");
+					int n = a.length;
+					if (a.length > 4-i) {
+						g.drawString(" " + a[i-(5-n)], i * 25, j * 25 + 20);
+					} else {
+						g.drawString(" ", i * 25, j * 25 + 15);
+					}
+				// Y  
+				} else if (i>4&&j<5) {
+					String[] a = hintArrY[i-5].split(",");
+					int n = a.length;
+					if (a.length > 4-j) {
+						g.drawString(" " + a[j-(5-n)], i * 25, j * 25 + 20);
+//						g.drawString(" " + a[2-j], i * 25, j * 25 + 20);
+					} else {
+						g.drawString(" ", i * 25, j * 25 + 20);
+					}
+				}
 			}
 		}
+		
+		
+		
+		
 
 		// 125,125 기준으로 라인 그리기
 		for (int i = 0; i <= 10; i++) {
