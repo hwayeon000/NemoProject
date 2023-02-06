@@ -200,8 +200,7 @@ public class FivePanel extends JPanel {
 		// y hint
 		String[] hintArrY = PrintQuestion.getHintArrY(res, 5);
 
- 		// 나오긴 하는데 맞는 로직은 아님..ㅎㅎ...
-		// 수정해보자.....
+		// 힌트 출력부 5 * 5
 		for (int i = 0; i < 8; i++) {
 			g.setFont(new Font("ans", Font.CENTER_BASELINE, 18));
 			for (int j = 0; j < map.length; j++) {
