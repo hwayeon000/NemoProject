@@ -1,4 +1,4 @@
-package help;
+package dto;
 
 public class UserDTO {
 	private String id;

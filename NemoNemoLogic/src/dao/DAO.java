@@ -1,4 +1,4 @@
-package help;
+package dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -6,6 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+
+import dto.GameDTO;
+import dto.UserDTO;
 
 public class DAO {
 	Connection conn = null;
@@ -19,8 +22,8 @@ public class DAO {
 //			String user = "campus_d_0120_4";
 //			String password = "smhrd4";
 			String url = "jdbc:oracle:thin:@localhost:1521:xe";
-			String user = "C##NEMO";
-			String password = "NEMO1234";
+			String user = "C##test";
+			String password = "12345";
 			
 			conn = DriverManager.getConnection(url, user, password);
 			

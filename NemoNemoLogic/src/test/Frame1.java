@@ -1,13 +1,13 @@
-package main;
+package test;
 
 import java.awt.FlowLayout;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
-public class Frame extends JFrame {
+public class Frame1 extends JFrame {
 
-	public Frame() {
+	public Frame1() {
 		// 프레임 크기 설정
 		setSize(800, 500);
 		setLocation(100, 100);

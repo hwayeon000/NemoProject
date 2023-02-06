@@ -1,34 +1,24 @@
-package main;
+package test;
 
 import java.awt.Color;
-
 import java.awt.Font;
-
 import java.awt.Graphics;
-
-import java.awt.Point;
-
 import java.awt.event.KeyEvent;
-
 import java.awt.event.KeyListener;
-
 import java.awt.event.MouseEvent;
-
 import java.awt.event.MouseListener;
 
-import java.util.Vector;
-
 import javax.swing.JFrame;
-
-import javax.swing.JLabel;
-
 import javax.swing.JPanel;
 
-public class Circle extends JFrame {
+
+public class NemoTest extends JFrame {
+
 	int x_max = 25;
 	int y_max = 25;
 	int count = 0;
 
+	
 	int[][] map = { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
 
 			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -37,8 +27,8 @@ public class Circle extends JFrame {
 
 			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, };
 
-	Circle() {
-		setTitle("마우스로 원그리기");
+	NemoTest() {
+		setTitle("네모네모 로직~");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		MyPanel t = new MyPanel();
 		setContentPane(t);
@@ -51,11 +41,14 @@ public class Circle extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		new Circle();
+	
+		new NemoTest();
+
 	}
 
 	class MyPanel extends JPanel {
 		int click_x = -1, click_y = -1;
+
 		public MyPanel() {
 			addKeyListener(new KeyListener() {
 
@@ -76,7 +69,7 @@ public class Circle extends JFrame {
 					if ((click_x >= 0 && click_x <= 9) && (click_y <= 9 && click_y >= 0)) {
 						map[click_x][click_y] = 0;
 						switch (e.getKeyCode()) {
-						
+
 						case KeyEvent.VK_UP:
 							if (--click_y < 0)
 								click_y = 0;
@@ -147,12 +140,21 @@ public class Circle extends JFrame {
 			}
 
 			for (int i = 0; i < 10; i++)
-				for (int j = 0; j < 10; j++)
-				{
-					if (map[i][j] == 1)
-					{
+				for (int j = 0; j < 10; j++) {
+					if (map[i][j] == 1) {
 						count++;
-						g.fillOval(i * 25, j * 25, 25, 25);
+//						g.fillOval(i * 25, j * 25, 25, 25);
+						// 사각형 칠하기
+						g.setColor(Color.RED);
+						// i, j 인덱스..
+						g.fillRect(i * 25, j * 25, 25, 25);
+					} else if (map[i][j] == 3) {
+						count++;
+//						g.fillOval(i * 25, j * 25, 25, 25);
+						// 사각형 칠하기
+						g.setColor(Color.yellow);
+						// i, j 인덱스..
+						g.fillRect(i * 25, j * 25, 25, 25);
 					}
 				}
 
