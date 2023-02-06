@@ -31,35 +31,6 @@ public class PrintQuestion {
 						System.out.print("  ");
 					}
 				}
-//				if (i < hintZone && j < hintZone) {
-//					System.out.print("  ");
-//				} else if (i >= hintZone && j >= hintZone) {
-//					if (user[i - len][j - len] == 1) {
-//						System.out.print("■" + " ");
-//					} else if (user[i - len][j - len] == 3) {
-//						System.out.print("X" + " ");
-//					} else {
-//						System.out.print("□" + " ");
-//					}
-//
-//				} else {
-//					if (i < len) {
-//						String[] a = hintArrY[j - len].split("");
-//						if (a.length > i) {
-//							System.out.print(a[i] + " ");
-//						} else {
-//							System.out.print("  ");
-//						}
-//					} else {
-//						String[] a = hintArrX[i - len].split("");
-//						if (a.length > j) {
-//							System.out.print(a[j] + " ");
-//						} else {
-//							System.out.print("  ");
-//						}
-//					}
-//
-//				}
 			}
 			System.out.println();
 		}
@@ -67,7 +38,6 @@ public class PrintQuestion {
 	}
 
 	public static String[] getHintArrX(int[][] ans, int numX) {
-
 		int cntNumX = 0;
 //		int numX = 5;
 		String[] hintArrX = new String[numX];
@@ -88,16 +58,14 @@ public class PrintQuestion {
 					}
 					cntNumX = 0;
 				}
-
 			}
 			cntNumX = 0;
 		}
-		
 		return hintArrX;
 	}
 
+	
 	public static String[] getHintArrY(int[][] ans, int numY) {
-
 		int cntNumY = 0;
 //		int numY = 5;
 		String[] hintArrY = new String[numY];
@@ -118,17 +86,13 @@ public class PrintQuestion {
 					}
 					cntNumY = 0;
 				}
-
 			}
 			cntNumY = 0;
 		}
-
 		return hintArrY;
-
 	}
 	
-	
-// 	// 답데이터 이중배열로 변경
+ 	// 답데이터 이중배열로 변경
  	public static int[][] arrMake(String ans, int levelNumber) {
  		int[][] res = new int[levelNumber][levelNumber];
  		String[] arr = ans.split(",");
