@@ -50,11 +50,17 @@ public class Controller {
 		}
 	}
 
+	// 레벨 선택, 5*5 또는 10*10
 	public ArrayList<Integer> levelChoice(int level_choice) {
 		ArrayList<Integer> res = dao.levelChoice(level_choice);
 		return res;
 	}
 
+	
+	
+	
+	
+	
 
 
 }

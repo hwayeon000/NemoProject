@@ -151,6 +151,12 @@ public class FivePanel extends JPanel {
 	class MyMainListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			// 패널 초기화
+			for (int i = 0; i < map.length; i++) {
+				for (int j = 0; j < map.length; j++) {
+					map[i][j] = 0;
+				}
+			}
 			win.change("MainPanel");
 		}
 	}
