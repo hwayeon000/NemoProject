@@ -25,8 +25,6 @@ public class FivePanel extends JPanel {
 			{ 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 }, 
 			{ 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 }, };
 	int[][] ansArr = new int[5][5];
-	String ansStr = "10101,00100,01110,01010,01110";
-	
 	
 	private JPanelChange win;
 	private JButton btnMain, btnX, btnPaint;
