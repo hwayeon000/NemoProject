@@ -7,26 +7,31 @@ import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 
 import controller.Controller;
-
+import dto.GameDTO;
 
 @SuppressWarnings("serial")
 public class MainPanel extends JPanel  {
-	// panel01
-
 	private JLabel exmLb;
 	private JButton btnLevel1, btnLevel2, btnOut, btn;
 	int btnNum;
-	private JScrollPane jScrollPane1;
-	private JTextArea jTextArea1;
 	private JPanelChange win;
 	Controller ct = new Controller();
 	
+	ArrayList<Integer> res;
 	private int gameLevel = 0;
-	private String gameNum = "";
+	// 레벨에 따른 게임 번호
+	private int gameNum = 0;
+	
+	// 게임 답 데이터 정보 담을 객체
+	GameDTO gameData = new GameDTO(0, "", "");
+	
+	
+	// 버튼 초기화 시 범위 오류 날 수 있음으로 넉넉히 부여
+	// 다른 방법이 없을까?
+	private int gameSeq = 40;
+    JButton[] gameBtn = new JButton[gameSeq]; // JButton을 담을수있는 그릇생성
 
 	// 게임 설명
 	String exm = "<html><body style='text-align:center;'>" + "=============================================<br/>"
@@ -52,27 +57,18 @@ public class MainPanel extends JPanel  {
 		btnLevel2.setSize(90, 20);
 		btnLevel2.setLocation(110, 10);
 		add(btnLevel2);
-		btnLevel2.addActionListener(new MyGameListener());
-//		btnChange2.addActionListener(new Level2Listener());
+//		btnLevel2.addActionListener(new MyGameListener());
+		btnLevel2.addActionListener(new Level2Listener());
 
 		btnOut = new JButton("로그아웃");
 		btnOut.setSize(90, 20);
 		btnOut.setLocation(230, 10);
 		add(btnOut);
 		btnOut.addActionListener(new OutListener());
-
-
+		// 게임 설명 텍스트 출력
 		exmLb = new JLabel(exm, JLabel.CENTER);
 		exmLb.setBounds(10, 40, 320, 150);
 		add(exmLb);
-		int cnt = 5;
-		
-//		jTextArea1 = new JTextArea();
-//		jScrollPane1 = new JScrollPane(jTextArea1);
-//		jScrollPane1.setSize(200, 150);
-//		jScrollPane1.setLocation(10, 240);
-//		add(jScrollPane1);
-
 	}
 
 	// 10이랑 5 Logic 수정을 위한 호출
@@ -80,15 +76,12 @@ public class MainPanel extends JPanel  {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			exmLb.setText(exm);
-			
 //			win.change("FivePanel");
 			win.change("TenPanel");
-//			win.change("Level2Listener");
-			
 		}
 	}
 
-	// 버튼 누르면 5*5
+	// 5 * 5 Logic
 	class Level1Listener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -101,24 +94,26 @@ public class MainPanel extends JPanel  {
 			int k = 10;
 			int j = 180;
 			// 게임 DB에서 받아와서 버튼 띄우기, 5개씩
-			ArrayList<Integer> res = ct.levelChoice(gameLevel);
+			res = ct.levelChoice(gameLevel);
+			gameSeq = res.size();
 			for (int i = 0; i < res.size(); i++) {
 				if (i % 5 == 0) {
 					j+=30;
 					k = 10;
 				}
-				btn = new JButton(res.get(i) + "");
-				btn.setSize(50, 20);
-				btn.setLocation(k + (60 * (i % 5)), j);
-				btnNum = (i+1);
-				add(btn);
-				/// 여기!!!!!!!!!!!!!!!!
-				btn.addActionListener(new EventHandler());
+				// 문제 번호 확인용
+//				btn = new JButton(res.get(i) + "");
+				gameBtn[i] = new JButton((i + 1) + "");
+				gameBtn[i].setSize(50, 20);
+				gameBtn[i].setLocation(k + (60 * (i % 5)), j);
+				add(gameBtn[i]);
+				gameBtn[i].addActionListener(new EventHandler());
+
 			}
 		}
 	}
 
-	// 패널 체크용, 비횔성화
+	// 10 * 10 Logic
 	class Level2Listener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -136,27 +131,43 @@ public class MainPanel extends JPanel  {
 			int j = 180;
 			// 게임 레벨에 따라 갯수 DB에서 받아와서 버튼 띄우기, 5개씩
 			ArrayList<Integer> res = ct.levelChoice(gameLevel);
+			gameSeq = res.size();
+			
 			for (int i = 0; i < res.size(); i++) {
 				if (i % 5 == 0) {
 					j+=30;
 					k = 10;
 				}
-				btn = new JButton(res.get(i) + "");
-				btn.setSize(50, 20);
-				btn.setLocation(k + (60 * (i % 5)), j);
-				add(btn);
-				btn.addActionListener(new EventHandler());
+				// 문제 번호 확인용
+//				btn = new JButton(res.get(i) + "");
+//				btn = new JButton((i + 1) + "");
+//				btn.setSize(50, 20);
+//				btn.setLocation(k + (60 * (i % 5)), j);
+//				add(btn);
+//				btn.addActionListener(new EventHandler());
+				gameBtn[i] = new JButton((i + 1) + "");
+				gameBtn[i].setSize(50, 20);
+				gameBtn[i].setLocation(k + (60 * (i % 5)), j);
+				add(gameBtn[i]);
+				gameBtn[i].addActionListener(new EventHandler());				
 			}
 		}
 	}
 
-	// 버튼 누르면 패널2번(로그인) 호출
+	// 버튼 누르면 로그인 패널 호출
 	class OutListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			// 텍스트 초기화
 			exmLb.setText(exm);
+			System.out.println(gameSeq);
+			// 버튼 초기화???
+			for (int i = 0; i < gameSeq; i++) {
+				gameBtn[i].setVisible(false);
+//				btn.setVisible(false);
+			}
 			setLayout(null);
-			win.change("tenPanel");
+			win.change("LoginPanel");
 		}
 	}
 	
@@ -164,19 +175,31 @@ public class MainPanel extends JPanel  {
 	class EventHandler implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			// e.getActionCommand() : 버튼 객체의 숫자!!!
+			// 패널 이동하면서 값 챙기기, gameLevel, gameNum
+			String gameNumber = e.getActionCommand();
+			gameNum = Integer.parseInt(gameNumber);
+			System.out.println(e.getActionCommand());
 			
-//			e.getActionCommand() : 버튼 객체의 숫자!!!
-			gameNum = e.getActionCommand();
-			if (e.getActionCommand().equals("1")) {
-				System.out.println(e.getActionCommand());
-				// 패널 이동하면서 값 챙기기, gameLevel, gameNum
+			// 값을 가져오긴 함, 다만 가지고 패널 이동이 안됨...
+			GameDTO data = ct.gamePlay(gameLevel, gameNum);
+			gameData.setGameCode(data.getGameCode());
+			gameData.setGameSeq(data.getGameSeq());
+			gameData.setGameSubject(data.getGameSubject());
+			System.out.println(data.getGameCode());
+			
+			if (gameLevel == 1) {
+				win.change("FivePanel");
+			} else {
+				win.change("TenPanel");
 			}
-			
 		}
 		
 	}
-	
 
+	public GameDTO deliverData() {
+		return gameData;
+	}
 	
 	
 }

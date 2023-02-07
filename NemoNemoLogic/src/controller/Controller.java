@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import dao.DAO;
+import dto.GameDTO;
 import dto.UserDTO;
 
 public class Controller {
     // DB클래스 불러오기
-    DAO dao = new DAO();
+    static DAO dao = new DAO();
 
 	static Scanner sc = new Scanner(System.in);
 	// static MusicPlayer player = new MusicPlayer();
@@ -51,11 +52,20 @@ public class Controller {
 	}
 
 	// 레벨 선택, 5*5 또는 10*10
-	public ArrayList<Integer> levelChoice(int level_choice) {
-		ArrayList<Integer> res = dao.levelChoice(level_choice);
+	public ArrayList<Integer> levelChoice(int gameLevel) {
+
+		ArrayList<Integer> res = dao.levelChoice(gameLevel);
 		return res;
 	}
 
+	// 난이도에 따른 게임 선택
+	public static GameDTO gamePlay(int gameLevel, int gameNum) {
+		// 받아온 게임 정보
+		GameDTO gameData = dao.gamePlay(gameLevel, gameNum);
+		
+		return gameData;
+	}
+	
 	
 	
 	

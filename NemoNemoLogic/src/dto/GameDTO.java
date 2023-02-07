@@ -9,14 +9,27 @@ public class GameDTO {
 	private String gameSubject;
 	private String userNick;
 	
-	public GameDTO(Integer userSeq, Integer gameSeq, String gameTime, Integer gameClear, String gameAns) {
+public GameDTO(Integer userSeq, Integer gameSeq, String gameTime, Integer gameClear, String gameCode,
+			String gameSubject, String userNick) {
+		super();
 		this.userSeq = userSeq;
 		this.gameSeq = gameSeq;
 		this.gameTime = gameTime;
 		this.gameClear = gameClear;
 		this.gameCode = gameCode;
 		this.gameSubject = gameSubject;
+		this.userNick = userNick;
 	}
+
+
+	public GameDTO(Integer gameSeq, String gameCode, String gameSubject) {
+	super();
+	this.gameSeq = gameSeq;
+	this.gameCode = gameCode;
+	this.gameSubject = gameSubject;
+}
+
+
 	public String getUserNick() {
 		return userNick;
 	}
