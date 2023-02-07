@@ -24,8 +24,10 @@ public class FivePanel extends JPanel {
 	int[][] map = { { 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 },
 			{ 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 }, 
 			{ 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 }, };
-
-
+	int[][] ansArr = new int[5][5];
+	String ansStr = "10101,00100,01110,01010,01110";
+	
+	
 	private JPanelChange win;
 	private JButton btnMain, btnX, btnPaint;
 	int click_x = -1, click_y = -1;
@@ -185,18 +187,6 @@ public class FivePanel extends JPanel {
 
 		g.setFont(new Font("Life", Font.ITALIC, 15));
 		g.drawString("life", 400, 150);
-
-		// 출력문 테스트중, 힌트 출력 필요
-//		for (int i = 0; i < 8; i++) {
-//			g.setFont(new Font("ans", Font.CENTER_BASELINE, 15));
-//			if (i > 2) {
-//				System.out.print(i + " ");
-//				g.drawString(" " + i, i * 25, 20);
-//			} else {
-//				System.out.print("else:" + i + " ");
-//				g.drawString(" ", i * 25, 20);
-//			}
-//		}
 		
 		String ans = "10101,00100,01110,01010,01110";
 		// 답데이터 이중배열로
@@ -234,9 +224,6 @@ public class FivePanel extends JPanel {
 			}
 		}
 		
-		
-		
-
 		// 75, 75 기준으로 라인 그리기
 		for (int i = 0; i <= 5; i++) {
 			// x, y 위치, 크기, 크기

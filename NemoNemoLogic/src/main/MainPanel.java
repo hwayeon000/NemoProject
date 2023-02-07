@@ -1,10 +1,7 @@
 package main;
 
-import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -137,7 +134,7 @@ public class MainPanel extends JPanel  {
 			
 			int k = 10;
 			int j = 180;
-			// 게임 DB에서 받아와서 버튼 띄우기, 5개씩
+			// 게임 레벨에 따라 갯수 DB에서 받아와서 버튼 띄우기, 5개씩
 			ArrayList<Integer> res = ct.levelChoice(gameLevel);
 			for (int i = 0; i < res.size(); i++) {
 				if (i % 5 == 0) {
