@@ -30,7 +30,7 @@ public class JPanelChange extends JFrame  {
 			getContentPane().add(fivePanel);
 			fivePanel.revalidate();
 			fivePanel.repaint();
-		} else {
+		} else if (panelName.equals("LoginPanel"))  {
 			revalidate();
 			getContentPane().removeAll();
 			getContentPane().add(loginPanel);

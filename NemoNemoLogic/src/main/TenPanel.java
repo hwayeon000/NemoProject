@@ -36,6 +36,12 @@ public class TenPanel extends JPanel{
 	int click_x = -1, click_y = -1;
 	public boolean userClick;
 
+	int num = 10;
+	String ans = "0100000010,1101001011,1001111001,1101111011,1110110111,1111111111,1101111011,1000110001,1100110011,0110110110";
+	int[][] ansArr = new int[num][num];
+	// 답 체크할 변수
+	int totalCount = 0;
+	
 	public TenPanel(JPanelChange win) {
 		setLayout(null);
 		this.win = win;
@@ -200,15 +206,28 @@ public class TenPanel extends JPanel{
 //				g.drawString(" ", i * 25, 20);
 //			}
 //		}
-		int num = 10;
-		String ans = "0100000010,1101001011,1001111001,1101111011,1110110111,1111111111,1101111011,1000110001,1100110011,0110110110";
+		
 		// 답데이터 이중배열로
-		int[][] res = PrintQuestion.arrMake(ans, num); 
+		ansArr = PrintQuestion.arrMake(ans, num); 
 		// x hint
-		String[] hintArrX = PrintQuestion.getHintArrX(res, num);
+		String[] hintArrX = PrintQuestion.getHintArrX(ansArr, num);
 		// y hint
-		String[] hintArrY = PrintQuestion.getHintArrY(res, num);
+		String[] hintArrY = PrintQuestion.getHintArrY(ansArr, num);
  		
+		
+		// 답 체크
+		int num = 0;
+		for (int i = 0; i < ansArr.length; i++) {
+			for (int j = 0; j < ansArr.length; j++) {
+				if (ansArr[i][j] == 1) {
+					num += 1;
+				} 
+			}
+		}
+		totalCount = num;
+		System.out.println("답 체크 " + totalCount);
+		
+		
 		// 10 * 10 힌트 출력부
 		for (int i = 0; i < 15; i++) {
 			g.setFont(new Font("ans", Font.CENTER_BASELINE, 18));

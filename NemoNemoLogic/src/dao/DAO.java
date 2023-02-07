@@ -22,10 +22,10 @@ public class DAO {
 //			String user = "campus_d_0120_4";
 //			String password = "smhrd4";
 			String url = "jdbc:oracle:thin:@localhost:1521:xe";
-//			String user = "C##NEMO";
-//			String password = "NEMO1234";
-			String user = "C##TEST";
-			String password = "12345";
+			String user = "C##NEMO";
+			String password = "NEMO1234";
+//			String user = "C##TEST";
+//			String password = "12345";
 			
 			conn = DriverManager.getConnection(url, user, password);
 			
@@ -127,20 +127,21 @@ public class DAO {
 		return game_seq;
 	}
 	
-	// 게임 난이도에 따른 게임 종류(개수) 반환
-	public GameDTO gameChoice(int level, int game_select) {
+	// 게임 번호의 답 데이터 반환
+	public GameDTO gamePlay(int gameLevel, int gameNum) {
 		GameDTO ans = new GameDTO(0, "");
 		getCon();
 		try {
-			String sql = "SELECT * FROM (SELECT ROWNUM AS RN, GAME_SEQ, GAME_CODE FROM GAME_INFO WHERE GAME_LEVEL = ? ORDER BY GAME_SEQ) WHERE RN = ?";
+			String sql = "SELECT * FROM (SELECT ROWNUM AS RN, GAME_SEQ, GAME_CODE, GAME_SUBJECT FROM GAME_INFO WHERE GAME_LEVEL = ? ORDER BY GAME_SEQ) WHERE RN = ?";
 			psmt = conn.prepareStatement(sql);
-			psmt.setInt(1, level);
-			psmt.setInt(2, game_select);
+			psmt.setInt(1, gameLevel);
+			psmt.setInt(2, gameNum);
 			rs = psmt.executeQuery();
 			
 			while (rs.next()) {
-				ans.setGameSeq(rs.getInt(2));
-				ans.setGameCode(rs.getString(3));
+				ans.setGameSeq(rs.getInt(2)); // 게임 seq
+				ans.setGameCode(rs.getString(3));  // 게임 답데이터
+				ans.setGameSubject(rs.getString(4));  // 그림
 			}
 		} catch (SQLException e) {
 			System.out.println("game level seq : 데이터베이스 연결 실패");
