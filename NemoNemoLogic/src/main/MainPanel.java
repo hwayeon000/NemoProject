@@ -2,6 +2,7 @@ package main;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Struct;
 import java.util.ArrayList;
 
 import javax.swing.JButton;
@@ -25,23 +26,13 @@ public class MainPanel extends JPanel  {
 	private int gameNum = 0;
 	
 	// 게임 답 데이터 정보 담을 객체
-	GameDTO gameData = new GameDTO(0, "", "");
-	
+	static GameDTO gameData;
+
 	
 	// 버튼 초기화 시 범위 오류 날 수 있음으로 넉넉히 부여
 	// 다른 방법이 없을까?
 	private int gameSeq = 40;
     JButton[] gameBtn = new JButton[gameSeq]; // JButton을 담을수있는 그릇생성
-
-	// 게임 설명
-	String exm = "<html><body style='text-align:center;'>" + "=============================================<br/>"
-			+ "ː            네모네모 로직 게임 설명             ː<br/>" + "ː                                          ː<br/>"
-			+ "ː   1. 쓰인 숫자만큼 연속된 칸을 칠할것 !          ː<br/>" + "ː   2. 숫자와 숫자 사이에는 최소한 한 칸을 비울 것 ! ː<br/>"
-			+ "ː   3. 숫자의 순서와 칠해진 칸의 순서가 일치할 것 !  ː<br/>" + "ː           레벨을 누르면 번호가 뜹니다 !         ː<br/>"
-			+ "=============================================</body></html>";
-	// 게임 선택
-	String playGame = "<html><body style='text-align:center;'>" + "=============================================<br/>"
-			+ "게임을 선택해 주세요 ( •̀ ω •́ )✧ <br/>" + "=============================================</body></html>";
 
 	public MainPanel(JPanelChange win) {
 		this.win = win;
@@ -103,6 +94,7 @@ public class MainPanel extends JPanel  {
 				}
 				// 문제 번호 확인용
 //				btn = new JButton(res.get(i) + "");
+				// 게임 번호 버튼전환 밑 띄우기
 				gameBtn[i] = new JButton((i + 1) + "");
 				gameBtn[i].setSize(50, 20);
 				gameBtn[i].setLocation(k + (60 * (i % 5)), j);
@@ -158,15 +150,7 @@ public class MainPanel extends JPanel  {
 	class OutListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// 텍스트 초기화
-			exmLb.setText(exm);
-			System.out.println(gameSeq);
-			// 버튼 초기화???
-			for (int i = 0; i < gameSeq; i++) {
-				gameBtn[i].setVisible(false);
-//				btn.setVisible(false);
-			}
-			setLayout(null);
+			clearPanel();
 			win.change("LoginPanel");
 		}
 	}
@@ -181,26 +165,45 @@ public class MainPanel extends JPanel  {
 			gameNum = Integer.parseInt(gameNumber);
 			System.out.println(e.getActionCommand());
 			
-			// 값을 가져오긴 함, 다만 가지고 패널 이동이 안됨...
-			GameDTO data = ct.gamePlay(gameLevel, gameNum);
-			gameData.setGameCode(data.getGameCode());
-			gameData.setGameSeq(data.getGameSeq());
-			gameData.setGameSubject(data.getGameSubject());
-			System.out.println(data.getGameCode());
+			ct.gamePlay(gameLevel, gameNum);
 			
 			if (gameLevel == 1) {
+				clearPanel();
 				win.change("FivePanel");
 			} else {
+				clearPanel();
 				win.change("TenPanel");
 			}
 		}
 		
 	}
-
-	public GameDTO deliverData() {
-		return gameData;
+	
+	public void clearPanel() {
+		// 텍스트 초기화
+		exmLb.setText(exm);
+		System.out.println(gameSeq);
+		// 버튼 초기화
+		for (int i = 0; i < gameSeq; i++) {
+			gameBtn[i].setVisible(false);
+//			btn.setVisible(false);
+		}
+		setLayout(null);
 	}
 	
 	
+	
+	
+	
+
+	// 게임 설명
+	String exm = "<html><body style='text-align:center;'>" + "=============================================<br/>"
+			+ "ː            네모네모 로직 게임 설명             ː<br/>" + "ː                                          ː<br/>"
+			+ "ː   1. 쓰인 숫자만큼 연속된 칸을 칠할것 !          ː<br/>" + "ː   2. 숫자와 숫자 사이에는 최소한 한 칸을 비울 것 ! ː<br/>"
+			+ "ː   3. 숫자의 순서와 칠해진 칸의 순서가 일치할 것 !  ː<br/>" + "ː           레벨을 누르면 번호가 뜹니다 !         ː<br/>"
+			+ "=============================================</body></html>";
+	// 게임 선택
+	String playGame = "<html><body style='text-align:center;'>" + "=============================================<br/>"
+			+ "게임을 선택해 주세요 ( •̀ ω •́ )✧ <br/>" + "=============================================</body></html>";
+
 }
 

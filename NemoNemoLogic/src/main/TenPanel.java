@@ -13,8 +13,14 @@ import java.awt.event.MouseListener;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 
+import controller.Controller;
+import dto.GameDTO;
+import main.FivePanel.DataListener;
+
 @SuppressWarnings("serial")
-public class TenPanel extends JPanel{
+public class TenPanel extends JPanel {
+
+	Controller ct = new Controller();
 
 	int x_max = 25;
 	int y_max = 25;
@@ -32,16 +38,18 @@ public class TenPanel extends JPanel{
 			{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, };
 
 	private JPanelChange win;
-	private JButton btnMain, btnX, btnPaint;
+	private JButton btnMain, btnX, btnPaint, btnStart;
 	int click_x = -1, click_y = -1;
 	public boolean userClick;
 
 	int num = 10;
-	String ans = "0100000010,1101001011,1001111001,1101111011,1110110111,1111111111,1101111011,1000110001,1100110011,0110110110";
+	// 답데이터 가져오기
+	String ans = "0000000000,0000000000,0000000000,0000000000,0000000000,0000000000,0000000000,0000000000,0000000000,0000000000";
+	static GameDTO gameData;
 	int[][] ansArr = new int[num][num];
 	// 답 체크할 변수
 	int totalCount = 0;
-	
+
 	public TenPanel(JPanelChange win) {
 		setLayout(null);
 		this.win = win;
@@ -66,6 +74,13 @@ public class TenPanel extends JPanel{
 		btnX.setLocation(430, 326);
 		add(btnX);
 		btnX.addActionListener(new MyXListener());
+
+		// 시작하기 버튼
+		btnStart = new JButton("시작하기");
+		btnStart.setSize(90, 20);
+		btnStart.setLocation(430, 386);
+		add(btnStart);
+		btnStart.addActionListener(new DataListener());
 
 		addKeyListener(new KeyListener() {
 
@@ -151,7 +166,7 @@ public class TenPanel extends JPanel{
 						map[x][y] = 3;
 					}
 
-					System.out.println("x, y : " + x + ", " + y);
+					System.out.println("10p click x, y : " + x + ", " + y);
 				}
 				repaint();
 			}
@@ -168,6 +183,8 @@ public class TenPanel extends JPanel{
 					map[i][j] = 0;
 				}
 			}
+			// 답데이터 초기화
+			ans = "0000000000,0000000000,0000000000,0000000000,0000000000,0000000000,0000000000,0000000000,0000000000,0000000000";
 			win.change("MainPanel");
 		}
 	}
@@ -185,6 +202,31 @@ public class TenPanel extends JPanel{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			userClick = false;
+		}
+	}
+
+	// 답데이터 불러와보자
+	class DataListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+
+			gameData = ct.deliverData();
+			ans = gameData.getGameCode();
+			System.out.println("제발좀.." + gameData.getGameCode());
+			System.out.println("ㅎㅎ" + gameData.getGameSubject());
+			paintComponent(getGraphics());
+
+			// 답 체크
+			int num = 0;
+			for (int i = 0; i < ansArr.length; i++) {
+				for (int j = 0; j < ansArr.length; j++) {
+					if (ansArr[i][j] == 1) {
+						num += 1;
+					}
+				}
+			}
+			totalCount = num;
+			System.out.println("답 체크 " + totalCount);
 		}
 	}
 
@@ -206,47 +248,33 @@ public class TenPanel extends JPanel{
 //				g.drawString(" ", i * 25, 20);
 //			}
 //		}
-		
+
 		// 답데이터 이중배열로
-		ansArr = PrintQuestion.arrMake(ans, num); 
+		ansArr = PrintQuestion.arrMake(ans, num);
 		// x hint
 		String[] hintArrX = PrintQuestion.getHintArrX(ansArr, num);
 		// y hint
 		String[] hintArrY = PrintQuestion.getHintArrY(ansArr, num);
- 		
-		
-		// 답 체크
-		int num = 0;
-		for (int i = 0; i < ansArr.length; i++) {
-			for (int j = 0; j < ansArr.length; j++) {
-				if (ansArr[i][j] == 1) {
-					num += 1;
-				} 
-			}
-		}
-		totalCount = num;
-		System.out.println("답 체크 " + totalCount);
-		
-		
+
 		// 10 * 10 힌트 출력부
 		for (int i = 0; i < 15; i++) {
 			g.setFont(new Font("ans", Font.CENTER_BASELINE, 18));
 			for (int j = 0; j < map.length; j++) {
 				// X
-				if (i<5&&j>4) {
+				if (i < 5 && j > 4) {
 					String[] a = hintArrX[j - 5].split(",");
 					int n = a.length;
-					if (a.length > 4-i) {
-						g.drawString(" " + a[i-(5-n)], i * 25, j * 25 + 20);
+					if (a.length > 4 - i) {
+						g.drawString(" " + a[i - (5 - n)], i * 25, j * 25 + 20);
 					} else {
 						g.drawString(" ", i * 25, j * 25 + 15);
 					}
-				// Y  
-				} else if (i>4&&j<5) {
-					String[] a = hintArrY[i-5].split(",");
+					// Y
+				} else if (i > 4 && j < 5) {
+					String[] a = hintArrY[i - 5].split(",");
 					int n = a.length;
-					if (a.length > 4-j) {
-						g.drawString(" " + a[j-(5-n)], i * 25, j * 25 + 20);
+					if (a.length > 4 - j) {
+						g.drawString(" " + a[j - (5 - n)], i * 25, j * 25 + 20);
 //						g.drawString(" " + a[2-j], i * 25, j * 25 + 20);
 					} else {
 						g.drawString(" ", i * 25, j * 25 + 20);
@@ -254,10 +282,6 @@ public class TenPanel extends JPanel{
 				}
 			}
 		}
-		
-		
-		
-		
 
 		// 125,125 기준으로 라인 그리기
 		for (int i = 0; i <= 10; i++) {
@@ -269,12 +293,13 @@ public class TenPanel extends JPanel{
 		}
 
 		// 칠하는 영역
-		for (int i = 0; i < 15; i++)
+		for (int i = 0; i < 15; i++) {
 			for (int j = 0; j < 15; j++) {
 				// 힌트 출력부 안칠해지도록 범위 지정
 				if (i > 4 && j > 4) {
 					if (map[i][j] == 1) {
-						count++;
+//						count++;
+						answerCheck();
 						// 사각형 칠하기
 						g.setColor(Color.BLUE);
 						// i, j 인덱스..
@@ -287,11 +312,29 @@ public class TenPanel extends JPanel{
 					}
 				}
 			}
+		}
 
 		g.setFont(new Font("Arial", Font.ITALIC, 15));
+		g.setColor(Color.black);
 		g.drawString(count + "", 430, 150);
 		count = 0;
 
+	}
+
+	public void answerCheck() {
+		for (int i = 0; i < 15; i++) {
+			for (int j = 0; j < 15; j++) {
+				// 힌트 출력부 안칠해지도록 범위 지정
+				if (i > 4 && j > 4) {
+					if (map[i][j] == ansArr[i - 5][j - 5]) {
+						// 답 이상함... 체크중..
+						System.out.println("답체크" + count);
+						count++;
+						break;
+					}
+				}
+			}
+		}
 	}
 
 }

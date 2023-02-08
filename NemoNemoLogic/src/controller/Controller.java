@@ -23,6 +23,7 @@ public class Controller {
 	static long start;
 	static long end;
 	static String time;
+	static GameDTO gameData = new GameDTO(level, "", "test");
 
 	public String join(UserDTO dto) { // 회원가입
 		row = dao.join(dto);
@@ -59,10 +60,15 @@ public class Controller {
 	}
 
 	// 난이도에 따른 게임 선택
-	public static GameDTO gamePlay(int gameLevel, int gameNum) {
+	public void gamePlay(int gameLevel, int gameNum) {
+		gameSeq = gameNum;
+		level = gameLevel;
 		// 받아온 게임 정보
-		GameDTO gameData = dao.gamePlay(gameLevel, gameNum);
-		
+		gameData = dao.gamePlay(gameLevel, gameNum);
+		System.out.println("ct:" + gameData.getGameCode());
+	}
+	
+	public GameDTO deliverData() {
 		return gameData;
 	}
 	

@@ -24,28 +24,29 @@ public class FivePanel extends JPanel {
 	int count = 0;
 
 //	5 * 5
-	int[][] map = { { 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 },
-			{ 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 }, 
-			{ 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 }, };
+	int[][] map = { { 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 },
+			{ 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 },
+			{ 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 }, };
 	int[][] ansArr = new int[5][5];
-	
+
 	private JPanelChange win;
 
 	MainPanel mp = new MainPanel(win);
 	Controller ct = new Controller();
-	
-	// 답데이터 가져오기.. 제발...ㅠ
-	static String ans = "10000,10000,00000,00000,00000";
-	private JButton btnMain, btnX, btnPaint;
+
+	// 답데이터 가져오기
+	static String ans = "00000,00000,00000,00000,00000";
+	static GameDTO gameData;
+	private JButton btnMain, btnX, btnPaint, btnStart;
 	int click_x = -1, click_y = -1;
 	public boolean userClick;
 
 	int len = (ans.length() + 1) / 2;
 //	ans[i][j] = map[i-len][j-len], 비교
-	
+
 	// 답 체크할 변수
 	int totalCount = 0;
-	
+
 	public FivePanel(JPanelChange win) {
 		setLayout(null);
 		this.win = win;
@@ -70,14 +71,23 @@ public class FivePanel extends JPanel {
 		btnX.setLocation(430, 326);
 		add(btnX);
 		btnX.addActionListener(new MyXListener());
-		
+
+		// 시작하기 버튼
+		btnStart = new JButton("시작하기");
+		btnStart.setSize(90, 20);
+		btnStart.setLocation(430, 386);
+		add(btnStart);
+		btnStart.addActionListener(new DataListener());
+
 		addKeyListener(new KeyListener() {
 			@Override
 			public void keyTyped(KeyEvent e) {
 			}
+
 			@Override
 			public void keyReleased(KeyEvent e) {
 			}
+
 			@Override
 			public void keyPressed(KeyEvent e) {
 				// System.out.println("a");
@@ -151,8 +161,8 @@ public class FivePanel extends JPanel {
 					} else {
 						map[x][y] = 3;
 					}
-
-					System.out.println("x, y : " + x + ", " + y);
+					// 클릭 한 곳 체크
+					System.out.println("5p click x, y : " + x + ", " + y);
 				}
 				repaint();
 			}
@@ -169,6 +179,8 @@ public class FivePanel extends JPanel {
 					map[i][j] = 0;
 				}
 			}
+			// 힌트 데이터 초기화
+			ans = "00000,00000,00000,00000,00000";
 			win.change("MainPanel");
 		}
 	}
@@ -189,6 +201,31 @@ public class FivePanel extends JPanel {
 		}
 	}
 
+	// 답데이터 불러와보자
+	class DataListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+
+			gameData = ct.deliverData();
+			ans = gameData.getGameCode();
+			System.out.println("제발좀.." + gameData.getGameCode());
+			System.out.println("ㅎㅎ" + gameData.getGameSubject());
+			paintComponent(getGraphics());
+
+			// 답 체크
+			int num = 0;
+			for (int i = 0; i < ansArr.length; i++) {
+				for (int j = 0; j < ansArr.length; j++) {
+					if (ansArr[i][j] == 1) {
+						num += 1;
+					}
+				}
+			}
+			totalCount = num;
+			System.out.println("답 체크 " + totalCount);
+		}
+	}
+
 	// 칸 칠하기
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -197,11 +234,9 @@ public class FivePanel extends JPanel {
 
 		g.setFont(new Font("Life", Font.ITALIC, 15));
 		g.drawString("life", 400, 150);
-		
-//		String ans = "10101,00100,01110,01010,01110";
-		
+
 		// 답데이터 이중배열로
-		ansArr = PrintQuestion.arrMake(ans, 5); 
+		ansArr = PrintQuestion.arrMake(ans, 5);
 		// x hint
 		String[] hintArrX = PrintQuestion.getHintArrX(ansArr, 5);
 		// y hint
@@ -212,21 +247,21 @@ public class FivePanel extends JPanel {
 			g.setFont(new Font("ans", Font.CENTER_BASELINE, 18));
 			for (int j = 0; j < map.length; j++) {
 				// X
-				if (i<3&&j>2) {
+				if (i < 3 && j > 2) {
 					String[] a = hintArrX[j - 3].split(",");
 					// length = 3, 2, 1
-					if (a.length > 2-i) {
+					if (a.length > 2 - i) {
 						int n = a.length;
-						g.drawString(" " + a[i-(3-n)], i * 25, j * 25 + 20);
+						g.drawString(" " + a[i - (3 - n)], i * 25, j * 25 + 20);
 					} else {
 						g.drawString(" ", i * 25, j * 25 + 20);
 					}
-				// Y  
-				} else if (i>2&&j<3) {
-					String[] a = hintArrY[i-3].split(",");
-					if (a.length > 2-j) {
+					// Y
+				} else if (i > 2 && j < 3) {
+					String[] a = hintArrY[i - 3].split(",");
+					if (a.length > 2 - j) {
 						int n = a.length;
-						g.drawString(" " + a[j-(3-n)], i * 25, j * 25 + 20);
+						g.drawString(" " + a[j - (3 - n)], i * 25, j * 25 + 20);
 //						g.drawString(" " + a[2-j], i * 25, j * 25 + 20);
 					} else {
 						g.drawString(" ", i * 25, j * 25 + 20);
@@ -234,19 +269,7 @@ public class FivePanel extends JPanel {
 				}
 			}
 		}
-		
-		// 답 체크
-		int num = 0;
-		for (int i = 0; i < ansArr.length; i++) {
-			for (int j = 0; j < ansArr.length; j++) {
-				if (ansArr[i][j] == 1) {
-					num += 1;
-				} 
-			}
-		}
-		totalCount = num;
-		System.out.println("답 체크 " + totalCount);
-		
+
 		// 75, 75 기준으로 라인 그리기
 		for (int i = 0; i <= 5; i++) {
 			// x, y 위치, 크기, 크기
@@ -257,7 +280,7 @@ public class FivePanel extends JPanel {
 		}
 
 		// 칠하는 영역
-		for (int i = 0; i < 8; i++)
+		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
 				// 힌트 출력부 안칠해지도록 범위 지정
 				if (i > 2 && j > 2) {
@@ -275,13 +298,12 @@ public class FivePanel extends JPanel {
 					}
 				}
 			}
-		
-		
+		}
+
 		g.setFont(new Font("Arial", Font.ITALIC, 15));
 		g.drawString(count + "", 430, 150);
 		count = 0;
 
 	}
 
-	
 }
