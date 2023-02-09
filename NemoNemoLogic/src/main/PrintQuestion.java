@@ -96,14 +96,14 @@ public class PrintQuestion {
  	public static int[][] arrMake(String ans, int levelNumber) {
  		int[][] res = new int[levelNumber][levelNumber];
  		String[] arr = ans.split(",");
-
+ 		System.out.println("답데이터 함수 출력부");
  		for (int i = 0; i < res.length; i++) {
  			String[] arr3 = arr[i].split("");
  			for (int j = 0; j < arr.length; j++) {
  				res[i][j] = Integer.parseInt(arr3[j]);
- //				System.out.print(res[i][j] + " ");
+ 				System.out.print(res[i][j] + " ");
  			}
- //			System.out.println();
+ 			System.out.println();
  		}
  		return res;
  	}

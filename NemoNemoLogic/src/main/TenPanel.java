@@ -220,10 +220,11 @@ public class TenPanel extends JPanel {
 			int num = 0;
 			for (int i = 0; i < ansArr.length; i++) {
 				for (int j = 0; j < ansArr.length; j++) {
+					System.out.print(ansArr[i][j] + " ");
 					if (ansArr[i][j] == 1) {
 						num += 1;
 					}
-				}
+				}System.out.println();
 			}
 			totalCount = num;
 			System.out.println("답 체크 " + totalCount);
@@ -252,9 +253,9 @@ public class TenPanel extends JPanel {
 		// 답데이터 이중배열로
 		ansArr = PrintQuestion.arrMake(ans, num);
 		// x hint
-		String[] hintArrX = PrintQuestion.getHintArrX(ansArr, num);
+		String[] hintArrX = PrintQuestion.getHintArrY(ansArr, num);
 		// y hint
-		String[] hintArrY = PrintQuestion.getHintArrY(ansArr, num);
+		String[] hintArrY = PrintQuestion.getHintArrX(ansArr, num);
 
 		// 10 * 10 힌트 출력부
 		for (int i = 0; i < 15; i++) {
@@ -269,7 +270,7 @@ public class TenPanel extends JPanel {
 					} else {
 						g.drawString(" ", i * 25, j * 25 + 15);
 					}
-					// Y
+				// Y
 				} else if (i > 4 && j < 5) {
 					String[] a = hintArrY[i - 5].split(",");
 					int n = a.length;
@@ -297,18 +298,20 @@ public class TenPanel extends JPanel {
 			for (int j = 0; j < 15; j++) {
 				// 힌트 출력부 안칠해지도록 범위 지정
 				if (i > 4 && j > 4) {
-					if (map[i][j] == 1) {
+//					if (map[i][j] == 1) {
+					if (ansArr[i - 5][j - 5] == 1) {
 //						count++;
 						answerCheck();
+						if (ansArr[i - 5][j - 5] == 1) count++;
 						// 사각형 칠하기
 						g.setColor(Color.BLUE);
 						// i, j 인덱스..
-						g.fillRect(i * 25, j * 25, 25, 25);
+						g.fillRect(i * 25, j * 25, 24, 24);
 					} else if (map[i][j] == 3) {
 						// 사각형 칠하기
 						g.setColor(Color.yellow);
 						// i, j 인덱스..
-						g.fillRect(i * 25, j * 25, 25, 25);
+						g.fillRect(i * 25, j * 25, 24, 24);
 					}
 				}
 			}
@@ -321,19 +324,11 @@ public class TenPanel extends JPanel {
 
 	}
 
-	public void answerCheck() {
-		for (int i = 0; i < 15; i++) {
-			for (int j = 0; j < 15; j++) {
-				// 힌트 출력부 안칠해지도록 범위 지정
-				if (i > 4 && j > 4) {
-					if (map[i][j] == ansArr[i - 5][j - 5]) {
-						// 답 이상함... 체크중..
-						System.out.println("답체크" + count);
-						count++;
-						break;
-					}
-				}
-			}
+	public void answerCheck() {		
+		for (int i = 0; i < ansArr.length; i++) {
+			for (int j = 0; j < ansArr.length; j++) {
+				System.out.print(ansArr[i][j] + " ");
+			}System.out.println();
 		}
 	}
 

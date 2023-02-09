@@ -235,12 +235,12 @@ public class FivePanel extends JPanel {
 		g.setFont(new Font("Life", Font.ITALIC, 15));
 		g.drawString("life", 400, 150);
 
-		// 답데이터 이중배열로
+		// 답데이터 이중배열, 함수 바뀜...하..ㅠ
 		ansArr = PrintQuestion.arrMake(ans, 5);
 		// x hint
-		String[] hintArrX = PrintQuestion.getHintArrX(ansArr, 5);
+		String[] hintArrX = PrintQuestion.getHintArrY(ansArr, 5);
 		// y hint
-		String[] hintArrY = PrintQuestion.getHintArrY(ansArr, 5);
+		String[] hintArrY = PrintQuestion.getHintArrX(ansArr, 5);
 
 		// 힌트 출력부 5 * 5
 		for (int i = 0; i < 8; i++) {
@@ -285,16 +285,18 @@ public class FivePanel extends JPanel {
 				// 힌트 출력부 안칠해지도록 범위 지정
 				if (i > 2 && j > 2) {
 					if (map[i][j] == 1) {
-						count++;
+//						count++;
+						System.out.println("map :" + i + ", " + j + ", " + ansArr[i-3][j-3]);
+						if (ansArr[i-3][j-3] == 1) count++;
 						// 사각형 칠하기
 						g.setColor(Color.BLUE);
 						// i, j 인덱스..
-						g.fillRect(i * 25, j * 25, 25, 25);
+						g.fillRect(i * 25, j * 25, 24, 24);
 					} else if (map[i][j] == 3) {
 						// 사각형 칠하기
 						g.setColor(Color.yellow);
 						// i, j 인덱스..
-						g.fillRect(i * 25, j * 25, 25, 25);
+						g.fillRect(i * 25, j * 25, 24, 24);
 					}
 				}
 			}
