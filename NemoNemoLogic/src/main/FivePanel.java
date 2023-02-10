@@ -44,6 +44,7 @@ public class FivePanel extends JPanel {
 	Controller ct = new Controller();
 	// 답 체크할 변수
 	int totalCount = 0;
+	int userCount = 0;
 	int count = 0;
 	// 답데이터 체크 후 성공시 띄울 다이얼!
 	JFrame frame1;
@@ -185,8 +186,6 @@ public class FivePanel extends JPanel {
 					} else {
 						map[x][y] = 3;
 					}
-					// 클릭 한 곳 체크
-					System.out.println("5p click x, y : " + x + ", " + y);
 				}
 				repaint();
 			}
@@ -229,9 +228,13 @@ public class FivePanel extends JPanel {
 	class SuccessListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println(totalCount + ", " + count);
-			if (totalCount == count) {
+			System.out.println(totalCount + ", " + count + ", " + userCount);
+			if (totalCount == userCount) {
 				end = System.currentTimeMillis();
+				int getCoin = 1;
+				if (life==3) getCoin = 1;
+				else getCoin = 0;
+				ct.UserCoinUpdate(getCoin);
 				JOptionPane.showMessageDialog(frame1,
 						"<html><body style='text-align:center;'>" + gameSubject + "<br/>축하합니다!</body></html>");
 			} else {
@@ -356,6 +359,7 @@ public class FivePanel extends JPanel {
 				if (i > len - 1 && j > len - 1) {
 					if (map[i][j] == 1) {
 						count++;
+						if (ansArr[j-len][i-len] == 1) userCount++;
 						// 사각형 칠하기
 						g.setColor(Color.BLUE);
 						// i, j 인덱스..

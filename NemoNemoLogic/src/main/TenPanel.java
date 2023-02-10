@@ -17,11 +17,6 @@ import javax.swing.JPanel;
 
 import controller.Controller;
 import dto.GameDTO;
-import main.FivePanel.DataListener;
-import main.FivePanel.MyMainListener;
-import main.FivePanel.MyPaintListener;
-import main.FivePanel.MyXListener;
-import main.FivePanel.SuccessListener;
 
 @SuppressWarnings("serial")
 public class TenPanel extends JPanel {
