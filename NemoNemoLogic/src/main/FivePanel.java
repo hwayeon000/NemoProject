@@ -9,8 +9,11 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.Arrays;
 
 import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import controller.Controller;
@@ -18,66 +21,87 @@ import dto.GameDTO;
 
 @SuppressWarnings("serial")
 public class FivePanel extends JPanel {
-
 	int x_max = 25;
 	int y_max = 25;
-	int count = 0;
-
-//	5 * 5
+	// 패널 구성
+	private JPanelChange win;
+	private JButton btnMain, btnX, btnPaint, btnStart, btnHint, btnSucc;
+	int click_x = -1, click_y = -1;
+	// 버튼에 따라 다르게 칠하기 위한 변수
+	public boolean userClick;
+	int level = 5;
+	// 5 * 5
 	int[][] map = { { 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 },
 			{ 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 },
 			{ 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 }, };
-	int[][] ansArr = new int[5][5];
-
-	private JPanelChange win;
-
-	MainPanel mp = new MainPanel(win);
-	Controller ct = new Controller();
-
 	// 답데이터 가져오기
-	static String ans = "00000,00000,00000,00000,00000";
 	static GameDTO gameData;
-	private JButton btnMain, btnX, btnPaint, btnStart;
-	int click_x = -1, click_y = -1;
-	public boolean userClick;
-
-	int len = (ans.length() + 1) / 2;
-//	ans[i][j] = map[i-len][j-len], 비교
-
+	static String ans = "00000,00000,00000,00000,00000";
+	static String gameSubject = "";
+	// 답 데이터를 이차원 배열로
+	int[][] ansArr = new int[level][level];
+	// 컨트롤러 통신을 위한 객체 생성
+	Controller ct = new Controller();
 	// 답 체크할 변수
 	int totalCount = 0;
+	int count = 0;
+	// 답데이터 체크 후 성공시 띄울 다이얼!
+	JFrame frame1;
+	// 목숨 3, 코인 담을 변수
+	static int life = 3;
+	static int userCoin = 0;
+	//시간 체크!
+	static long start;
+	static long end;
 
+	// 패널 생성자
 	public FivePanel(JPanelChange win) {
 		setLayout(null);
 		this.win = win;
-
-		// 게임 페이지에서 나가는 버튼
-		btnMain = new JButton("메인으로");
-		btnMain.setSize(90, 20);
-		btnMain.setLocation(430, 356);
-		add(btnMain);
-		btnMain.addActionListener(new MyMainListener());
-
-		// 파랑으로 칠하기
-		btnPaint = new JButton("칠하기");
-		btnPaint.setSize(90, 20);
-		btnPaint.setLocation(430, 296);
-		add(btnPaint);
-		btnPaint.addActionListener(new MyPaintListener());
-
-		// 노랑으로 칠하기
-		btnX = new JButton("X");
-		btnX.setSize(90, 20);
-		btnX.setLocation(430, 326);
-		add(btnX);
-		btnX.addActionListener(new MyXListener());
+		// life (430, 70) y + 30
 
 		// 시작하기 버튼
 		btnStart = new JButton("시작하기");
-		btnStart.setSize(90, 20);
-		btnStart.setLocation(430, 386);
+		btnStart.setSize(110, 20);
+		btnStart.setLocation(430, 100);
 		add(btnStart);
 		btnStart.addActionListener(new DataListener());
+
+		// 정답, 파란색
+		btnPaint = new JButton("■");
+		btnPaint.setSize(50, 20);
+//		btnPaint.setLocation(430, 296);
+		btnPaint.setLocation(430, 130);
+		add(btnPaint);
+		btnPaint.addActionListener(new MyPaintListener());
+
+		// x, 노랑색
+		btnX = new JButton("X");
+		btnX.setSize(50, 20);
+		btnX.setLocation(490, 130);
+		add(btnX);
+		btnX.addActionListener(new MyXListener());
+
+		// 힌트 사용 버튼, 코인 차감
+		btnHint = new JButton("힌트 사용");
+		btnHint.setSize(110, 20);
+		btnHint.setLocation(430, 160);
+		add(btnHint);
+		btnHint.addActionListener(new HintListener());
+
+		// 정답 체크
+		btnSucc = new JButton("(⌐■_■) 정답");
+		btnSucc.setSize(110, 20);
+		btnSucc.setLocation(430, 190);
+		add(btnSucc);
+		btnSucc.addActionListener(new SuccessListener());
+
+		// 게임 페이지에서 나가는 버튼
+		btnMain = new JButton("메인으로");
+		btnMain.setSize(110, 20);
+		btnMain.setLocation(430, 356);
+		add(btnMain);
+		btnMain.addActionListener(new MyMainListener());
 
 		addKeyListener(new KeyListener() {
 			@Override
@@ -201,17 +225,40 @@ public class FivePanel extends JPanel {
 		}
 	}
 
-	// 답데이터 불러와보자
+	// 정답 버튼 기능 =======================================
+	class SuccessListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			System.out.println(totalCount + ", " + count);
+			if (totalCount == count) {
+				end = System.currentTimeMillis();
+				JOptionPane.showMessageDialog(frame1,
+						"<html><body style='text-align:center;'>" + gameSubject + "<br/>축하합니다!</body></html>");
+			} else {
+				JOptionPane.showMessageDialog(frame1, "다시 확인해 보세요!!");
+			}
+		}
+	}
+	
+	// 힌트 사용 버튼, 코인이 있으면 가능 아니면 불가
+	class HintListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			userCoin--;
+		}
+	}
+
+	// 시작!!!! 코인을 같이 가져오기
 	class DataListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 
 			gameData = ct.deliverData();
+			userCoin = ct.UserCoinCheck();
 			ans = gameData.getGameCode();
-			System.out.println("제발좀.." + gameData.getGameCode());
-			System.out.println("ㅎㅎ" + gameData.getGameSubject());
+			gameSubject = gameData.getGameSubject();
 			paintComponent(getGraphics());
-
+			start = System.currentTimeMillis();
 			// 답 체크
 			int num = 0;
 			for (int i = 0; i < ansArr.length; i++) {
@@ -230,38 +277,61 @@ public class FivePanel extends JPanel {
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		g.setFont(new Font("Arial", Font.ITALIC, 30));
-		g.drawString("count", 400, 130);
+//		g.drawString("count", 430, 130);
+		g.drawString("count", 430, 30);
 
+		// life label 셋팅
 		g.setFont(new Font("Life", Font.ITALIC, 15));
-		g.drawString("life", 400, 150);
+//		g.drawString("life", 430, 150);
+		g.drawString("life", 430, 50);
 
-		// 답데이터 이중배열, 함수 바뀜...하..ㅠ
-		ansArr = PrintQuestion.arrMake(ans, 5);
+		// life 셋팅
+		g.setFont(new Font("life", Font.ITALIC, 15));
+		g.drawString(life + "", 460, 50);
+		
+		// coin label 셋팅
+		g.setFont(new Font("coin", Font.ITALIC, 15));
+//		g.drawString("life", 430, 150);
+		g.drawString("coin", 430, 70);
+
+		// coin 셋팅
+		g.setFont(new Font("coin", Font.ITALIC, 15));
+		g.drawString(userCoin + "", 460, 70);
+		
+		
+
+		// 정답 체크 데이터 초기화
+		count = 0;
+
+		// 답데이터 y, x
+		ansArr = PrintQuestion.arrMake(ans, level);
 		// x hint
-		String[] hintArrX = PrintQuestion.getHintArrY(ansArr, 5);
+		String[] hintArrX = PrintQuestion.getHintArrX(ansArr, level);
 		// y hint
-		String[] hintArrY = PrintQuestion.getHintArrX(ansArr, 5);
+		String[] hintArrY = PrintQuestion.getHintArrY(ansArr, level);
+
+		int len = (level + 1) / 2;
 
 		// 힌트 출력부 5 * 5
 		for (int i = 0; i < 8; i++) {
 			g.setFont(new Font("ans", Font.CENTER_BASELINE, 18));
 			for (int j = 0; j < map.length; j++) {
 				// X
-				if (i < 3 && j > 2) {
-					String[] a = hintArrX[j - 3].split(",");
+				if (i < len && j > len - 1) {
+					String[] a = hintArrX[j - len].split(",");
 					// length = 3, 2, 1
-					if (a.length > 2 - i) {
+					if (a.length > len - 1 - i) {
 						int n = a.length;
-						g.drawString(" " + a[i - (3 - n)], i * 25, j * 25 + 20);
+						g.drawString(" " + a[i - (len - n)], i * 25, j * 25 + 20);
 					} else {
 						g.drawString(" ", i * 25, j * 25 + 20);
 					}
 					// Y
-				} else if (i > 2 && j < 3) {
-					String[] a = hintArrY[i - 3].split(",");
-					if (a.length > 2 - j) {
+				} else if (i > len - 1 && j < len) {
+					String[] a = hintArrY[i - len].split(",");
+					if (a.length > len - 1 - j) {
 						int n = a.length;
-						g.drawString(" " + a[j - (3 - n)], i * 25, j * 25 + 20);
+						g.drawString(" " + a[j - (len - n)], i * 25, j * 25 + 20);
 //						g.drawString(" " + a[2-j], i * 25, j * 25 + 20);
 					} else {
 						g.drawString(" ", i * 25, j * 25 + 20);
@@ -271,7 +341,7 @@ public class FivePanel extends JPanel {
 		}
 
 		// 75, 75 기준으로 라인 그리기
-		for (int i = 0; i <= 5; i++) {
+		for (int i = 0; i <= level; i++) {
 			// x, y 위치, 크기, 크기
 //			g.drawLine(0, 25 * i, 250, 25 * i);
 //			g.drawLine(25 * i, 0, 25 * i, 250);
@@ -280,14 +350,12 @@ public class FivePanel extends JPanel {
 		}
 
 		// 칠하는 영역
-		for (int i = 0; i < 8; i++) {
-			for (int j = 0; j < 8; j++) {
+		for (int i = 0; i < level + len; i++) {
+			for (int j = 0; j < level + len; j++) {
 				// 힌트 출력부 안칠해지도록 범위 지정
-				if (i > 2 && j > 2) {
+				if (i > len - 1 && j > len - 1) {
 					if (map[i][j] == 1) {
-//						count++;
-						System.out.println("map :" + i + ", " + j + ", " + ansArr[i-3][j-3]);
-						if (ansArr[i-3][j-3] == 1) count++;
+						count++;
 						// 사각형 칠하기
 						g.setColor(Color.BLUE);
 						// i, j 인덱스..
@@ -302,10 +370,10 @@ public class FivePanel extends JPanel {
 			}
 		}
 
-		g.setFont(new Font("Arial", Font.ITALIC, 15));
-		g.drawString(count + "", 430, 150);
-		count = 0;
+	}
 
+	public void Listener(JFrame f) {
+		frame1 = f;
 	}
 
 }

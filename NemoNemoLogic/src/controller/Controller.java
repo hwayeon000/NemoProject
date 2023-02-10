@@ -16,8 +16,8 @@ public class Controller {
 	// MusicVO m = player.play(0); // 메인음악
 	int row = 0;
 	static String userNick = "";
-	static int userCoin = 0;
 	static int level = 0;
+	static int userCoin = 0;
 	static int userSeq = 0;
 	static int gameSeq = 0;
 	static long start;
@@ -25,14 +25,14 @@ public class Controller {
 	static String time;
 	static GameDTO gameData = new GameDTO(level, "", "test");
 
-	public String join(UserDTO dto) { // 회원가입
+	// 회원가입
+	public String join(UserDTO dto) {
 		row = dao.join(dto);
 		if (row > 0) {
 			return ("회원가입 성공!");
 		} else {
 			return ("아이디 또는 닉네임이 중복되었습니다.");
 		}
-
 	}
 
 	// 로그인
@@ -54,7 +54,6 @@ public class Controller {
 
 	// 레벨 선택, 5*5 또는 10*10
 	public ArrayList<Integer> levelChoice(int gameLevel) {
-
 		ArrayList<Integer> res = dao.levelChoice(gameLevel);
 		return res;
 	}
@@ -68,12 +67,21 @@ public class Controller {
 		System.out.println("ct:" + gameData.getGameCode());
 	}
 	
+	// 게임 정보
 	public GameDTO deliverData() {
 		return gameData;
 	}
 	
+	// 유저의 코인 정보
+	public int UserCoinCheck() {
+		return userCoin;
+	}
 	
-	
+	// 유저의 코인 정보
+	public int UserCoinUpdate(int coin) {
+		dao.updateCoin(coin, userSeq);
+		return userCoin;
+	}
 	
 	
 	

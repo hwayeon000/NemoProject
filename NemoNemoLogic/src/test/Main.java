@@ -1,5 +1,7 @@
 package test;
 
+import java.util.Arrays;
+
 import javax.swing.JFrame;
 
 public class Main {
@@ -14,10 +16,10 @@ public class Main {
 //        for (int i = 0; i < aaa.length; i++) {
 //			System.out.print(aaa[i] + " ");
 //		}
-        int num = 10;
+        int num = 5;
 		System.out.println();
-		String res = "0001100000,0011110000,1111110000,0011110000,0001100000,0011110000,0111111111,1111111110,0111111100,0001111000";
-//		String res = "01010,01010,00000,10001,01110";
+//		String res = "0001100000,0011110000,1111110000,0011110000,0001100000,0011110000,0111111111,1111111110,0111111100,0001111000";
+		String res = "01010,01010,00000,10001,01110";
 		
  		int[][] ans = new int[num][num];
  		String[] arr = res.split(",");
@@ -45,6 +47,8 @@ public class Main {
 		int entireZone = (ans.length + 1) / 2 + ans.length;
 		int len = (ans.length + 1) / 2;
 
+		System.out.println(Arrays.toString(hintArrX));
+		
 		for (int i = 0; i < entireZone; i++) {
 			for (int j = 0; j < entireZone; j++) {
 				

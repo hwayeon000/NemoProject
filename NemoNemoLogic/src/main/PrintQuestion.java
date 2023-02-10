@@ -13,27 +13,27 @@ public class PrintQuestion {
 		int entireZone = (ans.length + 1) / 2 + ans.length;
 		int len = (ans.length + 1) / 2;
 
-		for (int i = 0; i < entireZone; i++) {
-			for (int j = 0; j < entireZone; j++) {
-				
-				if (i < len) {
-					String[] a = hintArrY[j - len].split(",");
-					if (a.length > i) {
-						System.out.print(a[i] + " ");
-					} else {
-						System.out.print("  ");
-					}
-				} else {
-					String[] a = hintArrX[i - len].split(",");
-					if (a.length > j) {
-						System.out.print(a[j] + " ");
-					} else {
-						System.out.print("  ");
-					}
-				}
-			}
-			System.out.println();
-		}
+//		for (int i = 0; i < entireZone; i++) {
+//			for (int j = 0; j < entireZone; j++) {
+//				
+//				if (i < len) {
+//					String[] a = hintArrY[j - len].split(",");
+//					if (a.length > i) {
+//						System.out.print(a[i] + " ");
+//					} else {
+//						System.out.print("  ");
+//					}
+//				} else {
+//					String[] a = hintArrX[i - len].split(",");
+//					if (a.length > j) {
+//						System.out.print(a[j] + " ");
+//					} else {
+//						System.out.print("  ");
+//					}
+//				}
+//			}
+//			System.out.println();
+//		}
 
 	}
 
