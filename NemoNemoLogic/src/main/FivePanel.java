@@ -228,8 +228,8 @@ public class FivePanel extends JPanel {
 	class SuccessListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println(totalCount + ", " + count + ", " + userCount);
-			if (totalCount == userCount) {
+			System.out.println("check: " + totalCount + ", " + count + ", " + userCount);
+			if (totalCount == userCount && count == userCount) {
 				end = System.currentTimeMillis();
 				int getCoin = 1;
 				if (life==3) getCoin = 1;
@@ -305,6 +305,7 @@ public class FivePanel extends JPanel {
 
 		// 정답 체크 데이터 초기화
 		count = 0;
+		userCount = 0;
 
 		// 답데이터 y, x
 		ansArr = PrintQuestion.arrMake(ans, level);
