@@ -11,6 +11,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Random;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -31,6 +33,7 @@ public class FivePanel extends JPanel {
 	// 버튼에 따라 다르게 칠하기 위한 변수
 	public boolean userClick;
 	int level = 5;
+	int len = 0;
 	// 5 * 5
 	int[][] map = { { 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 },
 			{ 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -101,7 +104,7 @@ public class FivePanel extends JPanel {
 		// 랭킹 조회
 		btnSucc = new JButton("랭킹 조회");
 		btnSucc.setSize(110, 20);
-		btnSucc.setLocation(430, 210);
+		btnSucc.setLocation(430, 220);
 		add(btnSucc);
 		btnSucc.addActionListener(new RankListener());
 
@@ -210,7 +213,8 @@ public class FivePanel extends JPanel {
 					map[i][j] = 0;
 				}
 			}
-			// 힌트 데이터 초기화
+			// 힌트 데이터, 목숨 초기화
+			life = 3;
 			ans = "00000,00000,00000,00000,00000";
 			win.change("MainPanel");
 		}
@@ -232,17 +236,26 @@ public class FivePanel extends JPanel {
 		}
 	}
 
-	// 정답 버튼 기능 =======================================
+	// 정답 버튼 기능 ====================
 	class SuccessListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			System.out.println("check: " + totalCount + ", " + count + ", " + userCount);
 			if (totalCount == userCount && count == userCount) {
+				// 게임 끝나는 시간 체크
 				end = System.currentTimeMillis();
 				int getCoin = 1;
 				if (life==3) getCoin = 1;
 				else getCoin = 0;
+				// 코인 업데이트
 				ct.UserCoinUpdate(getCoin);
+				// 시간 담아 업데이트
+				String time = Long.toString((end - start) / 1000 / 60) + "," + Long.toString((end - start) / 1000 % 60);
+				// 체크
+				System.out.print(Long.toString((end - start) / 1000 / 60) + "분"
+						+ Long.toString((end - start) / 1000 % 60) + "초");
+				ct.UserGameUpdate(time);
+				
 				JOptionPane.showMessageDialog(frame1,
 						"<html><body style='text-align:center;'>" + gameSubject + "<br/>축하합니다!</body></html>");
 			} else {
@@ -255,7 +268,31 @@ public class FivePanel extends JPanel {
 	class HintListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			userCoin--;
+			if (userCoin == 0) {
+				JOptionPane.showMessageDialog(frame1, "코인이 없어요! 코인을 모으고 사용해주세요~!");
+			} else {
+				--userCoin;
+				// 코인 차감 업데이트
+				ct.UserCoinUpdate(userCoin);
+				--life;
+				Random rd = new Random();
+				int choice1 = rd.nextInt(level);
+				int choice2 = rd.nextInt(level);
+				String text = "힌트 사용 완료! 코인 한개 차감!\n" + userCoin + "개 남았습니다!";
+				System.out.println(choice1 + "열, " + choice2 + "행");
+				// 임시
+				if (ansArr[choice1][choice2] == 1) {
+					map[choice2 + len][choice1 + len] = 1;
+				} else {
+					map[choice2 + len][choice1 + len] = 3;
+					//목숨도 깔까..?
+				}
+				if (life == 0) {
+					text = "목숨이 모두 소진되었습니다.\n 진행이 불가능합니다..";
+				}
+				JOptionPane.showMessageDialog(frame1, text);
+			}
+			paintComponent(getGraphics());
 		}
 	}
 
@@ -263,16 +300,26 @@ public class FivePanel extends JPanel {
 	class RankListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			// 랭킹 정보 받아오기
 			ArrayList<GameDTO> list = ct.Rank();
-			
-			for(int i = 0; i < list.size(); i++) {
-				String[] time = list.get(i).getGameTime().split(",");
-				String textRank = "<html><body style='text-align:center;'>----------------랭크---------------<br/>"
-						+ (i+1) + " " + list.get(i).getUserNick()+"\t "+time[0] + "분 " + time[1] + "초<br/></body></html>";
-				JOptionPane.showMessageDialog(frame1, textRank);
+			if (list.size() != 0) {
+				// 텍스트 정렬
+				ArrayList<String> textRank = new ArrayList<>();
+				for(int i = 0; i < list.size(); i++) {
+					String[] time = list.get(i).getGameTime().split(",");
+					String sterRank= (i+1) + "등    " + list.get(i).getUserNick()+"     "+time[0] + "분 " + time[1] + "초";
+					textRank.add(sterRank);
+				}
+				String textRank1 = "<html><body style='text-align:center;'>=========== 랭크 ===========<br/>";
+				for (int i = 0; i < textRank.size(); i++) {
+					textRank1 += textRank.get(i) + "<br/>";
+				}
+				textRank1 += "</body></html>";
+				JOptionPane.showMessageDialog(frame1, textRank1);
+				
+			} else {
+				JOptionPane.showMessageDialog(frame1, "<html><body style='text-align:center;'>아직 도전자가 없네요!<br/>  도전해보세요!! (｡･∀･)ﾉﾞ<br/></body></html>");
 			}
-			
-		
 		}
 	}
 	
@@ -280,7 +327,6 @@ public class FivePanel extends JPanel {
 	class DataListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-
 			gameData = ct.deliverData();
 			userCoin = ct.UserCoinCheck();
 			ans = gameData.getGameCode();
@@ -339,7 +385,7 @@ public class FivePanel extends JPanel {
 		// y hint
 		String[] hintArrY = PrintQuestion.getHintArrY(ansArr, level);
 
-		int len = (level + 1) / 2;
+		len = (level + 1) / 2;
 
 		// 힌트 출력부 5 * 5
 		for (int i = 0; i < 8; i++) {

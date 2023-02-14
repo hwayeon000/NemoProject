@@ -22,10 +22,10 @@ public class DAO {
 //			String user = "campus_d_0120_4";
 //			String password = "smhrd4";
 			String url = "jdbc:oracle:thin:@localhost:1521:xe";
-			String user = "C##NEMO";
-			String password = "NEMO1234";
-//			String user = "C##TEST";
-//			String password = "12345";
+//			String user = "C##NEMO";
+//			String password = "NEMO1234";
+			String user = "C##TEST";
+			String password = "12345";
 			
 			conn = DriverManager.getConnection(url, user, password);
 			
@@ -250,7 +250,7 @@ public class DAO {
 		getCon();
 		int row = 0;
 		try {
-			String sql = "UPDATE USER_INFO SET USER_COIN = USER_COIN + ? WHERE USER_SEQ = ? ";
+			String sql = "UPDATE USER_INFO SET USER_COIN = ? WHERE USER_SEQ = ? ";
 			psmt = conn.prepareStatement(sql);
 			psmt.setInt(1, coin);
 			psmt.setInt(2, userSeq);
