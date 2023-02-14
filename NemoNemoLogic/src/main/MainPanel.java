@@ -183,9 +183,11 @@ public class MainPanel extends JPanel  {
 		exmLb.setText(exm);
 		System.out.println(gameSeq);
 		// 버튼 초기화
-		for (int i = 0; i < gameSeq; i++) {
-			gameBtn[i].setVisible(false);
+		if (gameBtn.length>0) {
+			for (int i = 0; i < gameSeq; i++) {
+				gameBtn[i].setVisible(false);
 //			btn.setVisible(false);
+			}
 		}
 		setLayout(null);
 	}
@@ -196,10 +198,14 @@ public class MainPanel extends JPanel  {
 	
 
 	// 게임 설명
-	String exm = "<html><body style='text-align:center;'>" + "=============================================<br/>"
-			+ "ː            네모네모 로직 게임 설명             ː<br/>" + "ː                                          ː<br/>"
-			+ "ː   1. 쓰인 숫자만큼 연속된 칸을 칠할것 !          ː<br/>" + "ː   2. 숫자와 숫자 사이에는 최소한 한 칸을 비울 것 ! ː<br/>"
-			+ "ː   3. 숫자의 순서와 칠해진 칸의 순서가 일치할 것 !  ː<br/>" + "ː           레벨을 누르면 번호가 뜹니다 !         ː<br/>"
+	String exm = "<html><body style='text-align:center;'>"
+			+ "=============================================<br/>"
+			+ "ː            네모네모 로직 게임 설명             ː<br/>"
+			+ "ː                                          ː<br/>"
+			+ "ː   1. 쓰인 숫자만큼 연속된 칸을 칠할것 !          ː<br/>"
+			+ "ː   2. 숫자와 숫자 사이에는 최소한 한 칸을 비울 것 ! ː<br/>"
+			+ "ː   3. 숫자의 순서와 칠해진 칸의 순서가 일치할 것 !  ː<br/>"
+			+ "ː           레벨을 누르면 번호가 뜹니다 !         ː<br/>"
 			+ "=============================================</body></html>";
 	// 게임 선택
 	String playGame = "<html><body style='text-align:center;'>" + "=============================================<br/>"
