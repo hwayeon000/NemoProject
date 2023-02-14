@@ -9,6 +9,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 import javax.swing.JButton;
@@ -95,6 +96,13 @@ public class FivePanel extends JPanel {
 		btnSucc.setLocation(430, 190);
 		add(btnSucc);
 		btnSucc.addActionListener(new SuccessListener());
+		
+		// 랭킹 조회
+		btnSucc = new JButton("랭킹 조회");
+		btnSucc.setSize(110, 20);
+		btnSucc.setLocation(430, 210);
+		add(btnSucc);
+		btnSucc.addActionListener(new RankListener());
 
 		// 게임 페이지에서 나가는 버튼
 		btnMain = new JButton("메인으로");
@@ -248,6 +256,23 @@ public class FivePanel extends JPanel {
 		}
 	}
 
+	// 랭킹 조회
+	class RankListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			ArrayList<GameDTO> list = ct.Rank();
+			
+			for(int i = 0; i < list.size(); i++) {
+				String[] time = list.get(i).getGameTime().split(",");
+				String textRank = "<html><body style='text-align:center;'>----------------랭크---------------<br/>"
+						+ (i+1) + " " + list.get(i).getUserNick()+"\t "+time[0] + "분 " + time[1] + "초<br/></body></html>";
+				JOptionPane.showMessageDialog(frame1, textRank);
+			}
+			
+		
+		}
+	}
+	
 	// 시작!!!! 코인을 같이 가져오기
 	class DataListener implements ActionListener {
 		@Override

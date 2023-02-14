@@ -83,6 +83,13 @@ public class Controller {
 		return userCoin;
 	}
 	
+	// 랭크 보여주기
+	public static ArrayList<GameDTO> Rank() {
+		ArrayList<GameDTO> gameUserRank = new ArrayList<>();
+		gameUserRank = dao.rank(gameSeq);
+
+		return gameUserRank;
+	}
 	
 	
 
