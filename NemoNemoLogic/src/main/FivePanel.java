@@ -289,6 +289,7 @@ public class FivePanel extends JPanel {
 				}
 				if (life == 0) {
 					text = "목숨이 모두 소진되었습니다.\n 진행이 불가능합니다..";
+					
 				}
 				JOptionPane.showMessageDialog(frame1, text);
 			}
