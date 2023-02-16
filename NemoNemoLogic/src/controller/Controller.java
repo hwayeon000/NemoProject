@@ -52,6 +52,15 @@ public class Controller {
 		}
 	}
 
+	// 로그아웃, 정보 초기화
+	public void logout() {
+		String userNick = "";
+		int level = 0;
+		int userCoin = 0;
+		int userSeq = 0;
+		int gameSeq = 0;
+	}
+	
 	// 레벨 선택, 5*5 또는 10*10
 	public ArrayList<Integer> levelChoice(int gameLevel) {
 		ArrayList<Integer> res = dao.levelChoice(gameLevel);

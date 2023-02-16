@@ -215,6 +215,9 @@ public class FivePanel extends JPanel {
 			}
 			// 힌트 데이터, 목숨 초기화
 			life = 3;
+			count = 0;
+			userCount = 0;
+			// 답데이터 초기화
 			ans = "00000,00000,00000,00000,00000";
 			win.change("MainPanel");
 		}
@@ -433,6 +436,7 @@ public class FivePanel extends JPanel {
 					if (map[i][j] == 1) {
 						count++;
 						if (ansArr[j-len][i-len] == 1) userCount++;
+						else --life;
 						// 사각형 칠하기
 						g.setColor(Color.BLUE);
 						// i, j 인덱스..

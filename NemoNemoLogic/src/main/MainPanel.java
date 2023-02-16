@@ -151,6 +151,7 @@ public class MainPanel extends JPanel  {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			clearPanel();
+			ct.logout();
 			win.change("LoginPanel");
 		}
 	}

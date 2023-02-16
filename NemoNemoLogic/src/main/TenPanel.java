@@ -9,6 +9,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.Random;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -17,6 +19,13 @@ import javax.swing.JPanel;
 
 import controller.Controller;
 import dto.GameDTO;
+import main.FivePanel.DataListener;
+import main.FivePanel.HintListener;
+import main.FivePanel.MyMainListener;
+import main.FivePanel.MyPaintListener;
+import main.FivePanel.MyXListener;
+import main.FivePanel.RankListener;
+import main.FivePanel.SuccessListener;
 
 @SuppressWarnings("serial")
 public class TenPanel extends JPanel {
@@ -24,11 +33,12 @@ public class TenPanel extends JPanel {
 	int y_max = 25;
 	// 패널 구성
 	private JPanelChange win;
-	private JButton btnMain, btnX, btnPaint, btnStart;
+	private JButton btnMain, btnX, btnPaint, btnStart, btnHint, btnSucc;
 	int click_x = -1, click_y = -1;
 	// 버튼에 따라 다르게 칠하기 위한 변수
 	public boolean userClick;
 	int level = 10;
+	int len = 0;
 	// 10 * 10
 	// 힌트 출력부 포함, 힌트부 : ( (10 + 1) / 2 )
 	int[][] map = { { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
@@ -49,13 +59,17 @@ public class TenPanel extends JPanel {
 	Controller ct = new Controller();
 	// 답 체크할 변수
 	int totalCount = 0;
+	int userCount = 0;
 	int count = 0;
 	// 답데이터 체크 후 성공시 띄울 다이얼!
 	JFrame frame1;
 	// 목숨 3
 	static int life = 3;
 	static int userCoin = 0;
-
+	//시간 체크!
+	static long start;
+	static long end;
+	
 	// 패널 생성자
 	public TenPanel(JPanelChange win) {
 		setLayout(null);
@@ -63,40 +77,53 @@ public class TenPanel extends JPanel {
 		// life (430, 70) y + 30
 		// 시작하기 버튼
 		btnStart = new JButton("시작하기");
-		btnStart.setSize(90, 20);
+		btnStart.setSize(110, 20);
 		btnStart.setLocation(430, 100);
 		add(btnStart);
 		btnStart.addActionListener(new DataListener());
 
-		// 파랑으로 칠하기
-		btnPaint = new JButton("선택");
-		btnPaint.setSize(90, 20);
-//				btnPaint.setLocation(430, 296);
+		// 정답, 파란색
+		btnPaint = new JButton("■");
+		btnPaint.setSize(50, 20);
+//		btnPaint.setLocation(430, 296);
 		btnPaint.setLocation(430, 130);
 		add(btnPaint);
 		btnPaint.addActionListener(new MyPaintListener());
 
-		// 노랑으로 칠하기
+		// x, 노랑색
 		btnX = new JButton("X");
-		btnX.setSize(90, 20);
-		btnX.setLocation(430, 160);
+		btnX.setSize(50, 20);
+		btnX.setLocation(490, 130);
 		add(btnX);
 		btnX.addActionListener(new MyXListener());
 
+		// 힌트 사용 버튼, 코인 차감
+		btnHint = new JButton("힌트 사용");
+		btnHint.setSize(110, 20);
+		btnHint.setLocation(430, 160);
+		add(btnHint);
+		btnHint.addActionListener(new HintListener());
+
 		// 정답 체크
-		btnPaint = new JButton("정답!");
-		btnPaint.setSize(90, 20);
-		btnPaint.setLocation(430, 190);
-		add(btnPaint);
-		btnPaint.addActionListener(new SuccessListener());
+		btnSucc = new JButton("(⌐■_■) 정답");
+		btnSucc.setSize(110, 20);
+		btnSucc.setLocation(430, 190);
+		add(btnSucc);
+		btnSucc.addActionListener(new SuccessListener());
+		
+		// 랭킹 조회
+		btnSucc = new JButton("랭킹 조회");
+		btnSucc.setSize(110, 20);
+		btnSucc.setLocation(430, 220);
+		add(btnSucc);
+		btnSucc.addActionListener(new RankListener());
 
 		// 게임 페이지에서 나가는 버튼
 		btnMain = new JButton("메인으로");
-		btnMain.setSize(90, 20);
+		btnMain.setSize(110, 20);
 		btnMain.setLocation(430, 356);
 		add(btnMain);
 		btnMain.addActionListener(new MyMainListener());
-		
 		
 		
 
@@ -201,8 +228,13 @@ public class TenPanel extends JPanel {
 					map[i][j] = 0;
 				}
 			}
+			// 힌트 데이터, 목숨 초기화
+			life = 3;
+			count = 0;
+			userCount = 0;
 			// 답데이터 초기화
-			ans = "0000000000,0000000000,0000000000,0000000000,0000000000,0000000000,0000000000,0000000000,0000000000,0000000000";
+			ans = "0000000000,0000000000,0000000000,0000000000,0000000000,"
+				+ "0000000000,0000000000,0000000000,0000000000,0000000000";
 			win.change("MainPanel");
 		}
 	}
@@ -223,29 +255,105 @@ public class TenPanel extends JPanel {
 		}
 	}
 
-	// 정답 버튼 기능 =======================================
+
+	// 정답 버튼 기능 ====================
 	class SuccessListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			System.out.println(totalCount + ", " + count);
-			if (totalCount == count)
+			System.out.println("check: " + totalCount + ", " + count + ", " + userCount);
+			if (totalCount == userCount && count == userCount) {
+				// 게임 끝나는 시간 체크
+				end = System.currentTimeMillis();
+				int getCoin = 1;
+				if (life==3) getCoin = 1;
+				else getCoin = 0;
+				// 코인 업데이트
+				ct.UserCoinUpdate(getCoin);
+				// 시간 담아 업데이트
+				String time = Long.toString((end - start) / 1000 / 60) + "," + Long.toString((end - start) / 1000 % 60);
+				// 체크
+				System.out.print(Long.toString((end - start) / 1000 / 60) + "분"
+						+ Long.toString((end - start) / 1000 % 60) + "초");
+				ct.UserGameUpdate(time);
+				
 				JOptionPane.showMessageDialog(frame1,
 						"<html><body style='text-align:center;'>" + gameSubject + "<br/>축하합니다!</body></html>");
-			else
+			} else {
 				JOptionPane.showMessageDialog(frame1, "다시 확인해 보세요!!");
+			}
+		}
+	}
+	
+	// 힌트 사용 버튼, 코인이 있으면 가능 아니면 불가
+	class HintListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (userCoin == 0) {
+				JOptionPane.showMessageDialog(frame1, "코인이 없어요! 코인을 모으고 사용해주세요~!");
+			} else {
+				--userCoin;
+				// 코인 차감 업데이트
+				ct.UserCoinUpdate(userCoin);
+				--life;
+				Random rd = new Random();
+				int choice1 = rd.nextInt(level);
+				int choice2 = rd.nextInt(level);
+				String text = "힌트 사용 완료! 코인 한개 차감!\n" + userCoin + "개 남았습니다!";
+				System.out.println(choice1 + "열, " + choice2 + "행");
+				// 임시
+				if (ansArr[choice1][choice2] == 1) {
+					map[choice2 + len][choice1 + len] = 1;
+				} else {
+					map[choice2 + len][choice1 + len] = 3;
+					//목숨도 깔까..?
+				}
+				if (life == 0) {
+					text = "목숨이 모두 소진되었습니다.\n 진행이 불가능합니다..";
+					
+				}
+				JOptionPane.showMessageDialog(frame1, text);
+			}
+			paintComponent(getGraphics());
 		}
 	}
 
+	// 랭킹 조회
+	class RankListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// 랭킹 정보 받아오기
+			ArrayList<GameDTO> list = ct.Rank();
+			if (list.size() != 0) {
+				// 텍스트 정렬
+				ArrayList<String> textRank = new ArrayList<>();
+				for(int i = 0; i < list.size(); i++) {
+					String[] time = list.get(i).getGameTime().split(",");
+					String sterRank= (i+1) + "등    " + list.get(i).getUserNick()+"     "+time[0] + "분 " + time[1] + "초";
+					textRank.add(sterRank);
+				}
+				String textRank1 = "<html><body style='text-align:center;'>=========== 랭크 ===========<br/>";
+				for (int i = 0; i < textRank.size(); i++) {
+					textRank1 += textRank.get(i) + "<br/>";
+				}
+				textRank1 += "</body></html>";
+				JOptionPane.showMessageDialog(frame1, textRank1);
+				
+			} else {
+				JOptionPane.showMessageDialog(frame1, "<html><body style='text-align:center;'>아직 도전자가 없네요!<br/>  도전해보세요!! (｡･∀･)ﾉﾞ<br/></body></html>");
+			}
+		}
+	}
+	
 	// 시작!!!! 코인을 같이 가져오기
 	class DataListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-
 			gameData = ct.deliverData();
+			userCoin = ct.UserCoinCheck();
 			ans = gameData.getGameCode();
 			gameSubject = gameData.getGameSubject();
 			paintComponent(getGraphics());
-
+			start = System.currentTimeMillis();
 			// 답 체크
 			int num = 0;
 			for (int i = 0; i < ansArr.length; i++) {
@@ -259,6 +367,7 @@ public class TenPanel extends JPanel {
 			System.out.println("답 체크 " + totalCount);
 		}
 	}
+
 
 	// 칸 칠하기
 	public void paintComponent(Graphics g) {
@@ -283,7 +392,7 @@ public class TenPanel extends JPanel {
 		// y hint
 		String[] hintArrY = PrintQuestion.getHintArrY(ansArr, level);
 		
-		int len = (level + 1 ) / 2;
+		len = (level + 1 ) / 2;
 		
 		// 10 * 10 힌트 출력부
 		for (int i = 0; i < 15; i++) {
@@ -326,8 +435,10 @@ public class TenPanel extends JPanel {
 			for (int j = 0; j < level + len; j++) {
 				// 힌트 출력부 안칠해지도록 범위 지정
 				if (i > len - 1 && j > len - 1) {
-					if (map[i][j] == 1) {
+					if (ansArr[j-len][i-len] == 1) {
 						count++;
+						if (ansArr[j-len][i-len] == 1) userCount++;
+						else --life;
 						// 사각형 칠하기
 						g.setColor(Color.BLUE);
 						// i, j 인덱스..
