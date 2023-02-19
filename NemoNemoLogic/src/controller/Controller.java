@@ -52,15 +52,6 @@ public class Controller {
 		}
 	}
 
-	// 로그아웃, 정보 초기화
-	public void logout() {
-		String userNick = "";
-		int level = 0;
-		int userCoin = 0;
-		int userSeq = 0;
-		int gameSeq = 0;
-	}
-	
 	// 레벨 선택, 5*5 또는 10*10
 	public ArrayList<Integer> levelChoice(int gameLevel) {
 		ArrayList<Integer> res = dao.levelChoice(gameLevel);
@@ -92,18 +83,25 @@ public class Controller {
 		return userCoin;
 	}
 	
-	// 랭크 보여주기
-	public static ArrayList<GameDTO> Rank() {
-		ArrayList<GameDTO> gameUserRank = new ArrayList<>();
-		gameUserRank = dao.rank(gameSeq);
-
-		return gameUserRank;
-	}
 	
 	// 게임 정보 업데이트 체크
 	public void UserGameUpdate(String time) {
 		String time1 = time;
 		dao.userGame(userSeq, gameSeq, time1);
+	}
+	
+	public ArrayList<GameDTO> Rank() {
+		ArrayList<GameDTO> gameUserRank = new ArrayList<>();
+		gameUserRank = dao.rank(gameSeq);
+		return gameUserRank;
+	}
+
+		public void logout() {
+		userNick = "";
+		level = 0;
+		userCoin = 0;
+		userSeq = 0;
+		gameSeq = 0;
 	}
 
 
