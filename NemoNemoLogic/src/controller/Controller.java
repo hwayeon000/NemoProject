@@ -100,7 +100,7 @@ public class Controller {
 		return gameUserRank;
 	}
 	
-	// 게임 정보 업데이트
+	// 게임 정보 업데이트 체크
 	public void UserGameUpdate(String time) {
 		String time1 = time;
 		dao.userGame(userSeq, gameSeq, time1);
